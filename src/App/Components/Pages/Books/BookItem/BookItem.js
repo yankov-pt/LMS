@@ -161,19 +161,19 @@ function BookItem(book) {
                 }
                 var booked = itemBook.bookedDates;
                 booked.push(newDate)
-                if (firstday.toDateString() === today.toDateString()) {
-                    console.log('yes');
-                    currentlyReading.push(newBook)
-                    console.log(currentlyReading)
-                    setLocalUser({ ...localUser, booksCurrentlyInUser: currentlyReading })
+                // if (firstday.toDateString() === today.toDateString()) {
+                //     console.log('yes');
+                //     currentlyReading.push(newBook)
+                //     console.log(currentlyReading)
+                //     setLocalUser({ ...localUser, booksCurrentlyInUser: currentlyReading })
 
-                }
-                else {
+                // }
+                // else {
                     console.log('no')
                     futureReading.push(newBook)
                     console.log(futureReading)
                     setLocalUser({ ...localUser, futureBooks: futureReading })
-                }
+                // }
                 setLocalState({ ...localState, bookedDates: booked })
                 console.log('22', localState)
                 firestore.collection('books').doc(currentBookId).set(localState).then((res) => { GetBookById(currentBookId) })

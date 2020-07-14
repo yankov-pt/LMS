@@ -25,6 +25,10 @@ import sideMenu from './Navigation/menuItems'
 import CloseIcon from '@material-ui/icons/Close';
 import { UserContext } from "../Context/userContext";
 import Unauthorized from './Pages/Unauthorized/Unauthorized'
+import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined';
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import Button from '@material-ui/core/Button';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -90,6 +94,10 @@ const useStyles = makeStyles((theme) => ({
         }),
         marginLeft: 0,
     },
+    MenuBtns: {
+        display: 'inline-flex',
+        alignItems: 'center'
+    }
 }));
 
 
@@ -141,16 +149,18 @@ function Content() {
                             Books
         </Typography>
                     </div>
-                    
-                    {user!==undefined ?
+
+                    {user !== undefined ?
                         <div>
 
                             {user.role === 'admin' ?
-                                <Link style={{ textDecoration: 'none', 'color': 'white', marginRight: '30px' }} to={'/admin'} >
+                                <Link style={{ textDecoration: 'none', 'color': 'white', marginRight: '30px' }} to={'/admin'} className={classes.MenuBtns}>
+                                    <VerifiedUserOutlinedIcon style={{  marginRight: '5px' }} />
                                     Admin
                                 </Link>
                                 : null}
-                            <Link style={{ textDecoration: 'none', 'color': 'white' }} to={'/profile'} >
+                            <Link style={{ textDecoration: 'none', 'color': 'white' }} to={'/profile'} className={classes.MenuBtns}>
+                                <AccountCircleOutlinedIcon style={{ marginRight: '5px' }} />
                                 {user.username}
                             </Link>
                         </div>

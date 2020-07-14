@@ -21,15 +21,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
+import Grid from '@material-ui/core/Grid';
+import UserRow from './UserRow'
 
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        height: '100%',
+        padding: '16px',
+        '.MuiTableRow-root:hover': {
+            backgroundColor: 'red'
+        }
     },
     avatar: {
         margin: theme.spacing(1),
@@ -47,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
 function UserList() {
     const classes = useStyles();
     const [users, setUsers] = useState([])
+    const [detectChange, setDetectChange] = useState(false)
+    const [searchUser, setSearchUser] = useState('')
+    const [fUsers, setFUsers] = useState([])
+
 
     const fetchData = async () => {
         const data = await firestore.collection("users").get();
@@ -55,51 +61,69 @@ function UserList() {
     useEffect(() => {
         fetchData();
     }, []);
+    useEffect(() => {
+       setFUsers(users)
+    }, [users]);
+    useEffect(() => {
+        if (detectChange) {
+            fetchData();
+            setDetectChange(false)
+        }
+    }, [detectChange]);
 
-    const BlockUser = (user) => {
-        console.log(user)
-    }
-
+    useEffect(() => {
+        let filteredArray = users
+        if (searchUser === '') {
+            setFUsers(users)
+        }
+        else {
+            setFUsers(filteredArray.filter(card =>
+                card.uid.includes(searchUser) || card.email.toLowerCase().includes(searchUser.toLowerCase()) || card.username.toLowerCase().includes(searchUser.toLowerCase()) || card.role.toLowerCase().includes(searchUser.toLowerCase())))
+        }
+    }, [searchUser])
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Paper>
-                    <Typography variant="h4" component="div">
-                        Потребители
-        </Typography>
-                    <TableContainer >
-                        <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Book</TableCell>
-                                    <TableCell>User</TableCell>
-                                    <TableCell>Action</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {users.length ?
-                                    users.map((row) => (
-                                        <TableRow key={row.id}>
-                                            <TableCell component="th" scope="row">
-                                                <Link style={{ textDecoration: 'none' }} to={{
-                                                    pathname: `/users/${row.id}`,
-                                                }}>
-                                                    {row.username}
-                                                </Link>
-                                            </TableCell>
-                                            <TableCell>{row.role}</TableCell>
-                                            <TableCell><button onClick={() => BlockUser(row)}>Взета</button></TableCell>
-                                        </TableRow>
-                                    ))
+        <Container component="main">
 
-                                    : null
-                                }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Paper>
-            </div>
+            <CssBaseline />
+            <Grid container spacing={2} >
+                <Grid item xs={12}>
+                    <Paper className={classes.paper}>
+                        <Typography variant="h4" component="div">
+                            Потребители
+        </Typography>
+                        <TextField
+                            className={classes.searchBar}
+                            id="standard-search"
+                            label="Потребител / Роля"
+                            fullWidth
+                            value={searchUser}
+                            type="search"
+                            onChange={(e) => setSearchUser(e.target.value)} />
+                        <TableContainer >
+                            <Table className={classes.table} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Username</TableCell>
+                                        <TableCell>Email</TableCell>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Role</TableCell>
+                                        <TableCell>Action</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {fUsers.length ?
+                                        fUsers.map((row) => (
+                                            <UserRow row={row} setDetectChange={setDetectChange} key={row.id} />
+                                        ))
+
+                                        : null
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
+                </Grid>
+            </Grid>
         </Container>
     );
 }

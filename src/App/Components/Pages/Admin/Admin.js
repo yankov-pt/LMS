@@ -135,8 +135,7 @@ function Admin() {
         element.status === "inUser"
       )
       .filter(element =>
-        element.startDate.toDate() < today
-
+        element.endDate.toDate() < today
       );
     if (searchЕxpired === '') {
       setЕxpired(filteredArray)

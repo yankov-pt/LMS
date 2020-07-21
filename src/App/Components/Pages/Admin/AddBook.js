@@ -10,6 +10,8 @@ import { firestore } from '../../Firebase/firebase'
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { storage } from '../../Firebase/firebase'
+import Container from '@material-ui/core/Container';
+
 
 const useStyles = makeStyles((theme) => ({
     prev: {
@@ -115,89 +117,92 @@ function BooksBase() {
     }
     const isInvalid = title === '' || description === '';
     return (
-        <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-        >
-            <Grid item xs={6}>
-                <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, image, bookedDates)}>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        spacing={5}
+        <Container component="main" >
 
-                    >
-                        <Grid item xs={6}>
-                            <TextField
-                                name="title"
-                                type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Title"
-                                fullWidth={true}
-                            />
-                            <TextField
-                                name="author"
-                                type="text"
-                                value={author}
-                                onChange={(e) => setAuthor(e.target.value)}
-                                placeholder="author"
-                                fullWidth={true}
-                            />
-                            <TextField
-                                name="description"
-                                type="text"
-                                value={description}
-                                multiline={true}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Description"
-                                fullWidth
-                            />
-                            <Grid
-                                container
-                                direction="row"
-                                justify="center"
-                                alignItems="center"
-                                spacing={2}
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+            >
+                <Grid item xs={6}>
+                    <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, image, bookedDates)}>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            spacing={5}
 
-                            >
-                                <Grid item xs={6}>
+                        >
+                            <Grid item xs={6}>
+                                <TextField
+                                    name="title"
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder="Title"
+                                    fullWidth={true}
+                                />
+                                <TextField
+                                    name="author"
+                                    type="text"
+                                    value={author}
+                                    onChange={(e) => setAuthor(e.target.value)}
+                                    placeholder="author"
+                                    fullWidth={true}
+                                />
+                                <TextField
+                                    name="description"
+                                    type="text"
+                                    value={description}
+                                    multiline={true}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder="Description"
+                                    fullWidth
+                                />
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="center"
+                                    alignItems="center"
+                                    spacing={2}
 
-                                    <TextField
-                                        name="genre"
-                                        type="text"
-                                        value={genre}
-                                        onChange={(e) => setGenre(e.target.value)}
-                                        placeholder="Genre"
-                                    />
+                                >
+                                    <Grid item xs={6}>
+
+                                        <TextField
+                                            name="genre"
+                                            type="text"
+                                            value={genre}
+                                            onChange={(e) => setGenre(e.target.value)}
+                                            placeholder="Genre"
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <TextField
+                                            name="language"
+                                            type="text"
+                                            value={language}
+                                            onChange={(e) => setLanguage(e.target.value)}
+                                            placeholder="Language"
+                                        />
+                                    </Grid>
                                 </Grid>
 
-                                <Grid item xs={6}>
-                                    <TextField
-                                        name="language"
-                                        type="text"
-                                        value={language}
-                                        onChange={(e) => setLanguage(e.target.value)}
-                                        placeholder="Language"
-                                    />
-                                </Grid>
+                                <Button disabled={isInvalid} type="submit">Add Book</Button>
+
                             </Grid>
-
-                            <Button disabled={isInvalid} type="submit">Add Book</Button>
-
+                            <Grid item xs={6}>
+                                <div id="preview" className={classes.prev}></div>
+                                <Button onClick={(e) => HandleUpload(e)}>Add Cover</Button>
+                                <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            <div id="preview" className={classes.prev}></div>
-                            <Button onClick={(e) => HandleUpload(e)}>Add Cover</Button>
-                            <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
-                        </Grid>
-                    </Grid>
-                </form>
+                    </form>
+                </Grid>
             </Grid>
-        </Grid>
+        </Container>
     );
 }
 

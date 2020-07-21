@@ -31,7 +31,7 @@ function BookCard({ book }) {
     return (
         <Grid item xs={3}>
             <Link style={{ textDecoration: 'none' }} to={{
-                pathname: `books/${book.id}`,
+                pathname: `/books/${book.id}`,
                 state: { book: book }
             }}>
                 <Paper elevation={3} className={classes.card}>

@@ -28,7 +28,8 @@ import Unauthorized from './Pages/Unauthorized/Unauthorized'
 import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import Button from '@material-ui/core/Button';
-
+import MenuList from './Navigation/MenuList';
+import Logo from '../../images/Logo.png'
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
     },
     toolbar: {
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        backgroundColor: '#ECECEC'
     },
     toolbarLeft: {
         display: "flex",
@@ -59,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuButton: {
         marginRight: theme.spacing(2),
+        color: '#235063'
     },
     hide: {
         display: 'none',
@@ -145,21 +148,19 @@ function Content() {
 
                             }
                         </IconButton>
-                        <Typography variant="h6" noWrap>
-                            Books
-        </Typography>
+                        <img src={Logo} alt="Logo" />
                     </div>
 
                     {user !== undefined ?
                         <div>
 
                             {user.role === 'admin' ?
-                                <Link style={{ textDecoration: 'none', 'color': 'white', marginRight: '30px' }} to={'/admin'} className={classes.MenuBtns}>
-                                    <VerifiedUserOutlinedIcon style={{  marginRight: '5px' }} />
+                                <Link style={{ textDecoration: 'none', 'color': '#235063', marginRight: '30px' }} to={'/admin'} className={classes.MenuBtns}>
+                                    <VerifiedUserOutlinedIcon style={{ marginRight: '5px' }} />
                                     Admin
                                 </Link>
                                 : null}
-                            <Link style={{ textDecoration: 'none', 'color': 'white' }} to={'/profile'} className={classes.MenuBtns}>
+                            <Link style={{ textDecoration: 'none', 'color': '#235063' }} to={'/profile'} className={classes.MenuBtns}>
                                 <AccountCircleOutlinedIcon style={{ marginRight: '5px' }} />
                                 {user.username}
                             </Link>
@@ -188,32 +189,10 @@ function Content() {
             >
 
                 <List>
-                    {sideMenu.map(({ path, name, withAuth, component, index }) => {
-                        if (!withAuth) {
-                            return (
+                    {sideMenu.map(({ path, name, withAuth, component, index, innerMenu }) => (
 
-                                <Link key={path} style={{ textDecoration: 'none', 'color': 'black' }} to={path} >
-                                    <ListItem button key={path}>
-                                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                        <ListItemText primary={name} />
-                                    </ListItem>
-                                </Link>
-                            )
-                        }
-                        else {
-                            if (user !== undefined) {
-                                return (
-                                    <Link key={path} style={{ textDecoration: 'none', 'color': 'black' }} to={path} >
-                                        <ListItem button key={path}>
-                                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                            <ListItemText primary={name} />
-                                        </ListItem>
-                                    </Link>
-                                )
-                            }
-                        }
-
-                    })}
+                        <MenuList path={path} name={name} withAuth={withAuth} component={component} index={index} innerMenu={innerMenu} />
+                    ))}
 
                 </List>
 
@@ -239,7 +218,7 @@ function Content() {
 
                             {
                                 localStorage.length !== 0
-                                    ? <Route path="/" />
+                                    ? <Route exact path="/" />
                                     : null
                             }
                         </>

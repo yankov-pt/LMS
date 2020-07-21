@@ -194,7 +194,7 @@ function Admin() {
                 <AddCircleOutlineOutlinedIcon />
 
                 <Typography variant="h6" component="div">
-                  Add Book
+                  Добави книга
                 </Typography>
               </Paper>
 
@@ -310,7 +310,7 @@ function Admin() {
               <Grid container spacing={2} >
                 <Grid item xs={6}>
                   <Typography variant="h4" component="div">
-                    Проспочени
+                    Просрочени
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>

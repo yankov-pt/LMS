@@ -8,9 +8,16 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { firestore } from '../../Firebase/firebase'
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
 import { storage } from '../../Firebase/firebase'
 import Container from '@material-ui/core/Container';
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Chip from "@material-ui/core/Chip";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,24 +29,63 @@ const useStyles = makeStyles((theme) => ({
     },
     uploadField: {
         display: 'none'
+    },
+    formControl: {
+        margin: theme.spacing(0),
+        minWidth: "100%",
+    },
+    chips: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    chip: {
+        margin: 1
+    },
+    noLabel: {
     }
 }));
+const genresList = [
+    'За деца',
+    'Биографии',
+    'Криминални',
+    'Бизнес и икономика',
+    'Еротика',
+    'Документални',
+    'Фантастика',
+    'История',
+    'Класика',
+    'Поезия',
+    'Разкази',
+    'Самоусъвършенстване',
+    'Романи',
+    'Езици',
+    'Трилъри и съспенс',
+    'Тийн литература',
+    'Романси',
+    'Религия'
+];
 
+
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium
+    };
+}
 function AddBook() {
     return (
-        <div>
-            <h1>AddBook</h1>
-            <Books />
-        </div>
+        <Books />
     );
 }
 function BooksBase() {
     const classes = useStyles();
-
+    const theme = useTheme();
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [language, setLanguage] = useState('')
-    const [genre, setGenre] = useState('')
+    const [genre, setGenre] = useState([])
     const [image, setImage] = useState('')
     const [description, setDescription] = useState('')
     const [bookedDates, setBookedDates] = useState([])
@@ -80,7 +126,7 @@ function BooksBase() {
                             setTitle('');
                             setAuthor('');
                             setLanguage('');
-                            setGenre('');
+                            setGenre([]);
                             setImage('');
                             setDescription('');
                             setBookedDates([]);
@@ -94,6 +140,10 @@ function BooksBase() {
         )
 
     }
+
+    const handleChangeGenre = event => {
+        setGenre(event.target.value);
+    };
     const HandleUpload = (e) => {
         e.preventDefault();
         document.getElementById("image-file").click()
@@ -115,9 +165,11 @@ function BooksBase() {
 
         setImage(evt.target.files[0])
     }
-    const isInvalid = title === '' || description === '';
+    const isInvalid = title === '' || description === '' || language === '' || image === '' || author === '' || genre.length === 0;
     return (
         <Container component="main" >
+            
+        <Typography variant="h1" component="h1">Добави Книга</Typography>
 
             <Grid
                 container
@@ -125,7 +177,7 @@ function BooksBase() {
                 justify="center"
                 alignItems="center"
             >
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, image, bookedDates)}>
                         <Grid
                             container
@@ -134,75 +186,110 @@ function BooksBase() {
                             spacing={5}
 
                         >
-                            <Grid item xs={6}>
+                            <Grid item xs={3}>
+                                <div id="preview" className={classes.prev}></div>
+                                <Button onClick={(e) => HandleUpload(e)} variant="outlined" color="primary">Добави корица</Button>
+                                <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
+                            </Grid>
+                            <Grid item xs={9}>
                                 <TextField
                                     name="title"
-                                    type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    placeholder="Title"
+                                    label="Заглавие"
                                     fullWidth={true}
                                 />
                                 <TextField
                                     name="author"
-                                    type="text"
                                     value={author}
                                     onChange={(e) => setAuthor(e.target.value)}
-                                    placeholder="author"
+                                    label="Автор"
                                     fullWidth={true}
                                 />
                                 <TextField
                                     name="description"
-                                    type="text"
                                     value={description}
                                     multiline={true}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="Description"
+                                    label="Описание"
                                     fullWidth
                                 />
                                 <Grid
                                     container
                                     direction="row"
                                     justify="center"
-                                    alignItems="center"
                                     spacing={2}
 
                                 >
                                     <Grid item xs={6}>
 
-                                        <TextField
-                                            name="genre"
-                                            type="text"
-                                            value={genre}
-                                            onChange={(e) => setGenre(e.target.value)}
-                                            placeholder="Genre"
-                                        />
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="demo-mutiple-chip-label">Жанрове</InputLabel>
+                                            <Select
+                                                labelId="demo-mutiple-chip-label"
+                                                id="demo-mutiple-chip"
+                                                multiple
+                                                value={genre}
+                                                onChange={handleChangeGenre}
+                                                input={<Input id="select-multiple-chip" />}
+                                                renderValue={selected => (
+                                                    <div className={classes.chips}>
+                                                        {selected.map(value => (
+                                                            <Chip key={value} label={value} className={classes.chip} />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                MenuProps={{
+                                                    PaperProps: {
+                                                        style: {
+                                                            maxHeight: 48 * 4.5 + 8,
+                                                            width: 250,
+                                                            position: 'absolute',
+                                                        }
+                                                    }
+                                                }}
+                                            >
+                                                {genresList.map(name => (
+                                                    <MenuItem
+                                                        key={name}
+                                                        value={name}
+                                                        style={getStyles(name, genre, theme)}
+                                                    >
+                                                        {name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        <TextField
-                                            name="language"
-                                            type="text"
-                                            value={language}
-                                            onChange={(e) => setLanguage(e.target.value)}
-                                            placeholder="Language"
-                                        />
-                                    </Grid>
+
+                                        <FormControl className={classes.formControl}>
+                                            
+                                                <InputLabel id="demo-simple-select-helper-label">Език</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-helper-label"
+                                                    id="demo-simple-select-helper"
+                                                    value={language}
+                                                onChange={(e) => setLanguage(e.target.value)}
+                                                >
+                                                    
+                                                    <MenuItem value={"BG"}>Български</MenuItem>
+                                                    <MenuItem value={"EN"}>Английски</MenuItem>
+                                                    <MenuItem value={"RU"}>Руски</MenuItem>
+                                                </Select>
+                                        </FormControl>
                                 </Grid>
+                                    </Grid>
 
-                                <Button disabled={isInvalid} type="submit">Add Book</Button>
 
+                                </Grid>
+                                <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Добави книга</Button>
                             </Grid>
-                            <Grid item xs={6}>
-                                <div id="preview" className={classes.prev}></div>
-                                <Button onClick={(e) => HandleUpload(e)}>Add Cover</Button>
-                                <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
-                            </Grid>
-                        </Grid>
                     </form>
-                </Grid>
             </Grid>
-        </Container>
+                </Grid>
+        </Container >
     );
 }
 

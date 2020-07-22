@@ -11,7 +11,6 @@ import AppBar from "@material-ui/core/AppBar";
 import clsx from "clsx";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -30,6 +29,8 @@ import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
 import Button from '@material-ui/core/Button';
 import MenuList from './Navigation/MenuList';
 import Logo from '../../images/Logo.png'
+import Typography from '@material-ui/core/Typography';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -203,7 +204,9 @@ function Content() {
                 })}
             >
                 <div className={classes.drawerHeader} />
-                <Suspense fallback={<h1>loading...</h1>}>
+                <Suspense fallback={
+                    <Typography variant="h1" component="h2">Комфорта</Typography>
+                }>
                     <Switch>
                         <>
                             {routes.map(({ path, component, type }) => {

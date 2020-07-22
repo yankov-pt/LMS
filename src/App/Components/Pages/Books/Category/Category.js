@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    cards: {
+        maxWidth: '1200px',
+        margin: "0 auto"
+
+    }
 }));
 
 function Category({ match, location }) {
@@ -48,9 +53,12 @@ function Category({ match, location }) {
 
     const fetchData = async (res) => {
         const data = await firestore.collection("books").get()
-        const filteredData = data.docs.map(doc => ({ ...doc.data(), id: doc.id })).filter(element =>
-            element.genre === res
-        );
+        const filteredData = data.docs.map(doc => ({ ...doc.data(), id: doc.id })).filter(el => {
+            if (el.genre.includes(res)) {
+                return el
+            }
+        })
+        
         setBooks(filteredData)
         setFilteredBooks(filteredData)
     };

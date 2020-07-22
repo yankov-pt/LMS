@@ -12,6 +12,7 @@ import { DateRangePicker } from 'react-date-range';
 import { bg } from 'date-fns/locale'
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
     cards: {
@@ -194,7 +195,7 @@ function BookItem(book) {
 
                         </Grid>
                         <Grid item xs={8}>
-                            <h1>{itemBook.title}</h1>
+                            <Typography variant="h1" component="h1">{itemBook.title}</Typography>
                             <h2>{itemBook.author}</h2>
                             <p>{itemBook.description}</p>
                             <h2>{itemBook.genre}</h2>

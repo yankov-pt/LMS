@@ -19,9 +19,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
-
-
-
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 const useStyles = makeStyles((theme) => ({
   paper: {
     height: '100%',
@@ -84,16 +84,16 @@ function Admin() {
       .filter(element =>
         Date.parse(element.endDate.toDate().toDateString()) < Date.parse(today.toDateString())
       );
-      books.map(element =>
-        console.log(Date.parse(element.endDate.toDate().toDateString()))
-        )
+    books.map(element =>
+      console.log(Date.parse(element.endDate.toDate().toDateString()))
+    )
     setBooksToBeTaken(filteredArray)
     setBooksToBeReturned(filteredArray1)
     setЕxpired(filteredArray3)
   }, [books])
 
   useEffect(() => {
-    console.log(booksToBeTaken)
+    console.log('books to be taken', booksToBeTaken)
   }, [booksToBeTaken])
 
   useEffect(() => {
@@ -185,10 +185,10 @@ function Admin() {
       <CssBaseline />
       <div >
         <Grid container spacing={2} >
-          <Grid item xs={10}>
+          <Grid item xs={12}>
             <Typography variant="h2">Dashboard</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Link style={{ textDecoration: 'none' }} to={'/addBook'}>
               <Paper className={classes.addBook}>
                 <AddCircleOutlineOutlinedIcon />
@@ -200,7 +200,40 @@ function Admin() {
 
             </Link>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <Link style={{ textDecoration: 'none' }} to={'/users'}>
+              <Paper className={classes.addBook}>
+                <SupervisedUserCircleIcon />
+                <Typography variant="h6" component="div">
+                  Потребители
+                </Typography>
+              </Paper>
+            </Link>
+          </Grid>
+          <Grid item xs={3}>
+            <Link style={{ textDecoration: 'none' }} to={'/book-search'}>
+              <Paper className={classes.addBook}>
+                <ImportContactsIcon />
+                <Typography variant="h6" component="div">
+                  Книги
+                </Typography>
+              </Paper>
+
+            </Link>
+          </Grid>
+          <Grid item xs={3}>
+            <Link style={{ textDecoration: 'none' }} to={'/users'}>
+              <Paper className={classes.addBook}>
+                <SettingsIcon />
+
+                <Typography variant="h6" component="div">
+                  Начална страница
+                </Typography>
+              </Paper>
+
+            </Link>
+          </Grid>
+          <Grid item xs={12}>
             <Paper className={classes.paper}>
               <Grid container spacing={2} >
                 <Grid item xs={6}>
@@ -225,6 +258,8 @@ function Admin() {
                     <TableRow>
                       <TableCell>Book</TableCell>
                       <TableCell>User</TableCell>
+                      <TableCell>From Date</TableCell>
+                      <TableCell>To date</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -241,6 +276,12 @@ function Admin() {
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
                               {row.user.username}
                             </Link>
+                          </TableCell>
+                          <TableCell>
+                            {row.startDate.toDate().toDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {row.endDate.toDate().toDateString()}
                           </TableCell>
                           <TableCell><button onClick={() => ChangeStatusToTaken(row)}>Взета</button></TableCell>
                         </TableRow>
@@ -277,6 +318,8 @@ function Admin() {
                     <TableRow>
                       <TableCell>Book</TableCell>
                       <TableCell>User</TableCell>
+                      <TableCell>From Date</TableCell>
+                      <TableCell>To date</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -293,6 +336,12 @@ function Admin() {
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
                               {row.user.username}
                             </Link>
+                          </TableCell>
+                          <TableCell>
+                            {row.startDate.toDate().toDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {row.endDate.toDate().toDateString()}
                           </TableCell>
                           <TableCell><button onClick={() => ChangeStatusToReturned(row)}>Върната</button></TableCell>
 
@@ -330,6 +379,8 @@ function Admin() {
                     <TableRow>
                       <TableCell>Book</TableCell>
                       <TableCell>User</TableCell>
+                      <TableCell>From Date</TableCell>
+                      <TableCell>To date</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -346,6 +397,12 @@ function Admin() {
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
                               {row.user.username}
                             </Link>
+                          </TableCell>
+                          <TableCell>
+                            {row.startDate.toDate().toDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {row.endDate.toDate().toDateString()}
                           </TableCell>
                           <TableCell><button onClick={() => ChangeStatusToReturned(row)}>Върната</button></TableCell>
 

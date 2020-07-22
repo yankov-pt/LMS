@@ -1,11 +1,11 @@
 
 import React from "react";
-
+import Typography from '@material-ui/core/Typography';
 
 
 function LandingPage() {
     return (
-        <h1>Home</h1>
+        <Typography variant="h1" component="h2">Комфорта</Typography>
     );
 }
 

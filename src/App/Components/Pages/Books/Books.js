@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import BookCard from './BookCard'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-
+import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +44,7 @@ function Books() {
     return (
         <Container component="main" >
 
-            <h1>Books</h1>
+            <Typography variant="h1" component="h1">Books</Typography>
             <TextField
                 className={classes.searchBar}
                 id="standard-search"

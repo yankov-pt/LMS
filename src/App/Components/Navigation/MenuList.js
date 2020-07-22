@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Link, Route, Switch, Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import clsx from 'clsx';
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     innerMenu: {
-        marginLeft: '20px'
+        padding: '4px 4px 4px 32px'
     },
     exprow: {
         display: 'flex',
@@ -59,9 +60,6 @@ function MenuList({ path, name, withAuth, component, index, innerMenu }) {
                             <Link key={path} style={{ textDecoration: 'none', 'color': 'black' }} className={classes.expCont} to={path} >
                                 {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                                 <ListItemText primary={name} />
-
-
-
                             </Link>
                             {expand
                                 ? <ExpandLessIcon style={{ cursor: 'pointer' }} onClick={() => setExpand(!expand)} />
@@ -80,10 +78,10 @@ function MenuList({ path, name, withAuth, component, index, innerMenu }) {
 
             {innerMenu ?
                 <Collapse in={expand} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding className={classes.innerMenu}>
+                    <List component="div" disablePadding >
                         {innerMenu.map(item => (
                             <Link key={item.path} style={{ textDecoration: 'none', 'color': 'black' }} to={{ pathname: item.path }} >
-                                <ListItem button key={item.path}>
+                                <ListItem button key={item.path} className={clsx(classes.innerMenu)}>
 
                                     <ListItemText primary={item.name} />
                                 </ListItem>

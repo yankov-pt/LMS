@@ -116,8 +116,8 @@ function UserItem(book) {
     return (
         <Container component="main" >
 
-            <h1>{user.username}</h1>
-            <h1>{user.role}</h1>
+            <Typography variant="h1" component="h1">{user.username}</Typography>
+            <Typography variant="h1" component="h1">{user.role}</Typography>
             <Grid container spacing={2} >
                 <Grid item xs={6}>
                     <Paper className={classes.paper}>

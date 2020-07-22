@@ -4,6 +4,7 @@ import { UserContext } from "../../../Context/userContext";
 import { auth } from "../../Firebase/firebase";
 import withAuthorization from '../../../Session/withAuthorization'
 import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 
 function Profile() {
     return (
@@ -15,7 +16,7 @@ function Profile() {
                     authUser[0] !== undefined ?
                         (
                             <div className="content">
-                                <h1>Hello {authUser[0].username}!</h1>
+                                <Typography variant="h1" component="h1">Hello {authUser[0].username}!</Typography>
                                 <h3>E-mail: {authUser[0].email}</h3>
                                 <button className="w-full py-3 bg-red-600 mt-4 text-white" onClick={() => { auth.signOut() }}>Sign out</button>
                             </div>

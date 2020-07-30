@@ -35,10 +35,10 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         textAlign: 'center'
     },
-    clBtn:{
+    clBtn: {
         marginTop: '16px'
     }
-    
+
 
 }));
 
@@ -147,18 +147,18 @@ function BookItem(book) {
             status: 'toBeTaken' //toBeTaken || inUser || returned
         }).then(
             (res) => {
-
+                console.log(res)
                 var newDate = {
                     startDate: myDates[0].startDate,
                     endDate: myDates[0].endDate,
                     user: user.uid,
-                    operationId: res.Pc.path.segments[1]
+                    operationId: res.ua.path.segments[1]
                 }
                 var newBook = {
                     startDate: myDates[0].startDate,
                     endDate: myDates[0].endDate,
                     book: currentBookId,
-                    operationId: res.Pc.path.segments[1]
+                    operationId: res.ua.path.segments[1]
                 }
                 var booked = itemBook.bookedDates;
                 booked.push(newDate)
@@ -170,10 +170,10 @@ function BookItem(book) {
 
                 // }
                 // else {
-                    console.log('no')
-                    futureReading.push(newBook)
-                    console.log(futureReading)
-                    setLocalUser({ ...localUser, futureBooks: futureReading })
+                console.log('no')
+                futureReading.push(newBook)
+                console.log(futureReading)
+                setLocalUser({ ...localUser, futureBooks: futureReading })
                 // }
                 setLocalState({ ...localState, bookedDates: booked })
                 console.log('22', localState)
@@ -209,22 +209,22 @@ function BookItem(book) {
                         :
                         <div className={classes.clendarBox}>
 
-                                <DateRangePicker
-                                    locale={bg}
-                                    onChange={item => setMyDates([item.selection])}
-                                    showSelectionPreview={true}
-                                    moveRangeOnFirstSelection={false}
-                                    ranges={myDates}
-                                    direction="horizontal"
-                                    staticRanges={[]}
-                                    inputRanges={[]}
-                                    disabledDates={reservedDates}
-                                    startDatePlaceholder={'От'}
-                                    endDatePlaceholder={'До'}
-                                    minDate={new Date()}
-                                    className={classes.clendar}
-                                />
-                                <Button onClick={(e) => HandleReserve(e)} color="primary" variant="contained" className={classes.clBtn}>Резервирай</Button>
+                            <DateRangePicker
+                                locale={bg}
+                                onChange={item => setMyDates([item.selection])}
+                                showSelectionPreview={true}
+                                moveRangeOnFirstSelection={false}
+                                ranges={myDates}
+                                direction="horizontal"
+                                staticRanges={[]}
+                                inputRanges={[]}
+                                disabledDates={reservedDates}
+                                startDatePlaceholder={'От'}
+                                endDatePlaceholder={'До'}
+                                minDate={new Date()}
+                                className={classes.clendar}
+                            />
+                            <Button onClick={(e) => HandleReserve(e)} color="primary" variant="contained" className={classes.clBtn}>Резервирай</Button>
                         </div>
                     }
                 </Grid>

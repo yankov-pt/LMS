@@ -75,38 +75,39 @@ function BookCard({ book }) {
 
 
     return (
-        <Grid item xs={3}>
 
-            <Paper elevation={3} className={classes.card}>
+
+        <Paper elevation={3} className={classes.card}>
+            <Link style={{ textDecoration: 'none' }} to={{
+                pathname: `/books/${book.id}`,
+                state: { book: book }
+            }}>
+                <img src={book.cover} />
+            </Link>
+            <div className={classes.textCont}>
+                <p className={classes.language}>{book.language}</p>
+                <div className={classes.genres}>
+                    {book.genre.map(el =>
+                        (<Link style={{ textDecoration: 'none' }} to={{
+                            pathname: `/category/${el}`,
+                            state: { book: book }
+                        }}>
+                            <p className={classes.genre}>#{el}</p>
+                        </Link>)
+                    )}
+                </div>
                 <Link style={{ textDecoration: 'none' }} to={{
                     pathname: `/books/${book.id}`,
                     state: { book: book }
                 }}>
-                    <img src={book.cover} />
+                    {book.title.length > 47
+                        ? <h3 className={classes.title}>{book.title.substring(0, 47)}...</h3>
+                        : <h3 className={classes.title}>{book.title}</h3>}
+                    <h5 className={classes.author}>{book.author}</h5>
                 </Link>
-                <div className={classes.textCont}>
-                    <p className={classes.language}>{book.language}</p>
-                    <div className={classes.genres}>
-                        {book.genre.map(el =>
-                            (<Link style={{ textDecoration: 'none' }} to={{
-                                pathname: `/category/${el}`,
-                                state: { book: book }
-                            }}>
-                                <p className={classes.genre}>#{el}</p>
-                            </Link>)
-                        )}
-                    </div>
-                    <Link style={{ textDecoration: 'none' }} to={{
-                        pathname: `/books/${book.id}`,
-                        state: { book: book }
-                    }}>
-                        <h3 className={classes.title}>{book.title}</h3>
-                        <h5 className={classes.author}>{book.author}</h5>
-                    </Link>
 
-                </div>
-            </Paper>
-        </Grid>
+            </div>
+        </Paper>
     );
 }
 

@@ -7,6 +7,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { UserProvider } from "./Context/userContext";
 import { UserTypeProvider } from "./Context/userTypeContext";
 import Content from './Components/Content'
+
 import './styles.css'
 
 const theme = createMuiTheme({
@@ -21,6 +22,7 @@ const theme = createMuiTheme({
             main: "#1EA09F"
         }
     },
+
     typography: {
         h1: {
             fontSize: 72,
@@ -66,16 +68,18 @@ const theme = createMuiTheme({
             fontSize: 14,
             fontFamily: '"Nunito", Arial, Helvetica, sans-serif'
         },
-        
+
     }
 });
 
-
-
-
-
 function App() {
-
+    setInterval(function () {
+        var d = new Date();
+        var n = d.toTimeString().split(' ');
+        if (n[0] === '00:00:00') {
+            console.log("It's a new day")
+        }
+    }, 1000);
 
     return (
         <ThemeProvider theme={theme}>

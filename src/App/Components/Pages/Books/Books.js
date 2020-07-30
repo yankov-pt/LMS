@@ -7,30 +7,47 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-
 const useStyles = makeStyles((theme) => ({
     cards: {
         maxWidth: '1200px',
-        margin: "0 auto"
+        margin: "0 auto",
+        width: '100%'
 
     }
 }));
-function Books() {
+function Books(searchWord) {
     const classes = useStyles();
-
+    var searchString = ''
+    if (searchWord.location.searchWord?.length > 0) {
+        searchString = searchWord.location.searchWord
+    }
     const [books, setBooks] = useState([])
     const [filteredBooks, setFilteredBooks] = useState([])
-    const [searchBook, setSearchBook] = useState('')
+    const [searchBook, setSearchBook] = useState(searchString)
     useEffect(() => {
         const fetchData = async () => {
-            const data = await firestore.collection("books").get();
+            const data = await firestore.collection("books").get()
             setBooks(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-            setFilteredBooks(data.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+            if (searchString.length > 0) {
+                console.log('hiiiiiiiiiiii')
+                setSearchBook(searchString)
+                const arr = data.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+                setFilteredBooks(arr.filter(book =>
+                    book.title.toLowerCase().includes(searchBook.toLowerCase()) || book.author.toLowerCase().includes(searchBook.toLowerCase())))
+
+            }
+            else {
+                setFilteredBooks(data.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+
+            }
         };
+
         fetchData();
         console.log(books)
     }, []);
+
     useEffect(() => {
+        console.log(searchBook)
         let filteredArray = books
         if (searchBook === '') {
             setFilteredBooks(filteredArray)
@@ -44,15 +61,32 @@ function Books() {
     return (
         <Container component="main" >
 
-            <Typography variant="h1" component="h1">Books</Typography>
-            <TextField
-                className={classes.searchBar}
-                id="standard-search"
-                label="Търси по заглавие или автор"
-                fullWidth
-                value={searchBook}
-                type="search"
-                onChange={(e) => setSearchBook(e.target.value)} />
+            <Typography variant="h1" component="h1">Книги</Typography>
+            <Grid
+                container
+                direction="row"
+                spacing={2}
+            >
+                <Grid item xs={12} sm={4} md={3}>
+                    <TextField
+                        className={classes.searchBar}
+                        id="standard-search"
+                        label="Търси по заглавие или автор"
+                        fullWidth
+                        value={searchBook}
+                        type="search"
+                        onChange={(e) => setSearchBook(e.target.value)}
+
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    Категория
+                </Grid>
+                <Grid item xs={4}>
+                    Език
+                </Grid>
+            </Grid>
+
             <Grid
                 container
                 direction="row"
@@ -60,10 +94,15 @@ function Books() {
                 spacing={5}
                 className={classes.cards}
             >
+                {filteredBooks.length > 0
+                    ? filteredBooks.map((book, index) => (
+                        <Grid key={index} item xs={12} sm={4} md={3}>
+                            <BookCard book={book} />
+                        </Grid>
+                    ))
+                    : <Typography variant="h5" component="h5">Няма намерени резултати</Typography>
+                }
 
-                {filteredBooks.map(book => (
-                    <BookCard key={book.id} book={book} />
-                ))}
             </Grid>
         </Container>
     );

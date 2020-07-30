@@ -37,25 +37,26 @@ const useStyles = makeStyles((theme) => ({
 
 function LogIn({ history }) {
   const classes = useStyles();
-  
+
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [error, setError] = useState(null)
-  // const signInWithEmailAndPasswordHandler = (event, email, password) => {
-  //   event.preventDefault();
-  //   auth.signInWithEmailAndPassword(email, password)
-  //     .then(data => {
-  //       history.push('/profile')
-  //     })
-  //     .catch(error => {
-  //       setError("Error signing in with password and email!");
-  //       console.error("Error signing in with password and email", error);
-  //     });
-  //   setEmail("")
-  //   setPassword('')
-  // };
+  const signInWithEmailAndPasswordHandler = (event, email, password, rememberMe) => {
+    event.preventDefault();
+    auth.signInWithEmailAndPassword(email, password)
+      .then(data => {
+        history.push('/profile')
+      })
+      .catch(error => {
+        setError("Error signing in with password and email!");
+        console.error("Error signing in with password and email", error);
+      });
+    setEmail("")
+    setPassword('')
+  };
 
 
   return (
@@ -93,7 +94,7 @@ function LogIn({ history }) {
             onChange={(event) => setPassword(event.target.value)}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox value="remember" color="primary" onClick={(e) => setRememberMe(!rememberMe)} />}
             label="Запомни ме"
           />
           <Button
@@ -102,7 +103,7 @@ function LogIn({ history }) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            // onClick={(event) => { signInWithEmailAndPasswordHandler(event, email, password) }}
+            onClick={(event) => { signInWithEmailAndPasswordHandler(event, email, password, rememberMe) }}
           >
             Влез
           </Button>

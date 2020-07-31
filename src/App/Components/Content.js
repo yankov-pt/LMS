@@ -85,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: "24px 0 ",
+        position: "relative",
+        minHeight: '100vh',
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -101,6 +103,15 @@ const useStyles = makeStyles((theme) => ({
     MenuBtns: {
         display: 'inline-flex',
         alignItems: 'center'
+    },
+    footer:{
+        position: 'absolute',
+        bottom: '0',
+        backgroundColor: '#225164',
+        display: 'block',
+        color: 'white',
+        padding: ' 10px 15px',
+        width: '100%'
     }
 }));
 
@@ -115,7 +126,6 @@ function Content() {
         if (user) {
             setTest(true)
         }
-        console.log(user)
     }, [user])
     const handleDrawer = () => {
         setOpen(!open);
@@ -227,8 +237,13 @@ function Content() {
                         </>
                     </Switch>
                 </Suspense>
+                <footer className={classes.footer}>
+                    Design and development by Darina Yordanova
+                </footer>
             </main>
+
         </div>
+
     );
 }
 

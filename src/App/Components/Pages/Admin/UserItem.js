@@ -3,8 +3,6 @@ import React, { useEffect, useContext, useState, useRef } from "react";
 import { BrowserRouter as Router, Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { firestore } from '../../Firebase/firebase'
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import withAuthorization from '../../../Session/withAuthorization'
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';

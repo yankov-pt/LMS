@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Link, Route, Switch, Redirect, useLocation } f
 
 const useStyles = makeStyles((theme) => ({
     card: {
+        height: '100%',
         borderRadius: '20px',
         '& img':
         {
@@ -59,7 +60,11 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
         fontSize: '25px',
         lineHeight: '28px',
-        color: 'black'
+        color: 'black',
+        display: '-webkit-box',
+        WebkitLineClamp: '2',
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
     },
     author: {
         fontSize: '16px',
@@ -79,10 +84,12 @@ function BookCard({ book }) {
 
         <Paper elevation={3} className={classes.card}>
             <Link style={{ textDecoration: 'none' }} to={{
-                pathname: `/books/${book.id}`,
-                state: { book: book }
+                pathname: `/books/${book.id}`
             }}>
-                <img src={book.cover} />
+
+                {book.cover?.length === 0 ?
+                    <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=9a63f7e3-3f7c-492a-9f9e-7a444b43f05a" alt={book.title} className={classes.cover} />
+                    : <img src={book.cover} alt={book.title} className={classes.cover} />}
             </Link>
             <div className={classes.textCont}>
                 <p className={classes.language}>{book.language}</p>
@@ -100,9 +107,7 @@ function BookCard({ book }) {
                     pathname: `/books/${book.id}`,
                     state: { book: book }
                 }}>
-                    {book.title.length > 47
-                        ? <h3 className={classes.title}>{book.title.substring(0, 47)}...</h3>
-                        : <h3 className={classes.title}>{book.title}</h3>}
+                    <h3 className={classes.title}>{book.title}</h3>
                     <h5 className={classes.author}>{book.author}</h5>
                 </Link>
 

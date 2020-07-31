@@ -30,7 +30,6 @@ export const generateUserDocument = async (user, additionalData) => {
   if (!user) return;
   const userRef = firestore.doc(`users/${user.uid}`);
   const snapshot = await userRef.get();
-  console.log('here +>', user)
   if (!snapshot.exists) {
     const role = "user"
     const { email } = user;

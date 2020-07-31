@@ -83,6 +83,7 @@ function BooksBase() {
     const [image, setImage] = useState('')
     const [description, setDescription] = useState('')
     const [bookedDates, setBookedDates] = useState([])
+    const [copies, setCopies] = useState(1)
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates) => {
         e.preventDefault();
@@ -115,6 +116,7 @@ function BooksBase() {
                             language,
                             genre,
                             cover,
+                            copies,
                             bookedDates
                         }).then(res => {
                             setTitle('');
@@ -124,6 +126,7 @@ function BooksBase() {
                             setImage('');
                             setDescription('');
                             setBookedDates([]);
+                            setCopies(1)
                             document.getElementById("preview").innerHTML = "";
 
                         }
@@ -162,8 +165,8 @@ function BooksBase() {
     const isInvalid = title === '' || description === '' || language === '' || image === '' || author === '' || genre.length === 0;
     return (
         <Container component="main" >
-            
-        <Typography variant="h1" component="h1">Добави Книга</Typography>
+
+            <Typography variant="h1" component="h1">Добави Книга</Typography>
 
             <Grid
                 container
@@ -256,33 +259,45 @@ function BooksBase() {
                                         </FormControl>
                                     </Grid>
 
-                                    <Grid item xs={6}>
+                                    <Grid item xs={3}>
 
                                         <FormControl className={classes.formControl}>
-                                            
-                                                <InputLabel id="demo-simple-select-helper-label">Език</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-helper-label"
-                                                    id="demo-simple-select-helper"
-                                                    value={language}
+
+                                            <InputLabel id="demo-simple-select-helper-label">Език</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-helper-label"
+                                                id="demo-simple-select-helper"
+                                                value={language}
                                                 onChange={(e) => setLanguage(e.target.value)}
-                                                >
-                                                    
-                                                    <MenuItem value={"BG"}>Български</MenuItem>
-                                                    <MenuItem value={"EN"}>Английски</MenuItem>
-                                                    <MenuItem value={"RU"}>Руски</MenuItem>
-                                                </Select>
+                                            >
+
+                                                <MenuItem value={"BG"}>Български</MenuItem>
+                                                <MenuItem value={"EN"}>Английски</MenuItem>
+                                                <MenuItem value={"RU"}>Руски</MenuItem>
+                                            </Select>
                                         </FormControl>
-                                </Grid>
                                     </Grid>
+                                    <Grid item xs={3}>
 
 
+                                        <TextField
+                                            name="copies"
+                                            value={copies}
+                                            multiline={true}
+                                            onChange={(e) => setCopies(e.target.value)}
+                                            label="Екземпляри"
+                                            fullWidth
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Добави книга</Button>
+
+
                             </Grid>
+                            <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Добави книга</Button>
+                        </Grid>
                     </form>
-            </Grid>
                 </Grid>
+            </Grid>
         </Container >
     );
 }

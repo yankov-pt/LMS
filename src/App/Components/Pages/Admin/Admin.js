@@ -3,13 +3,12 @@ import { firestore } from '../../Firebase/firebase'
 // import { firestore } from 'firebase-admin';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import withAuthorization from '../../../Session/withAuthorization'
 import { BrowserRouter as Router, Link, Route, Switch, Redirect, useLocation } from 'react-router-dom';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -283,7 +282,9 @@ function Admin() {
                           <TableCell>
                             {row.endDate.toDate().toDateString()}
                           </TableCell>
-                          <TableCell><button onClick={() => ChangeStatusToTaken(row)}>Взета</button></TableCell>
+                          <TableCell>
+                          <Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToTaken(row)} >Взета</Button>
+                            </TableCell>
                         </TableRow>
                       ))
                       : null
@@ -343,7 +344,7 @@ function Admin() {
                           <TableCell>
                             {row.endDate.toDate().toDateString()}
                           </TableCell>
-                          <TableCell><button onClick={() => ChangeStatusToReturned(row)}>Върната</button></TableCell>
+                          <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
 
                         </TableRow>
                       ))
@@ -404,7 +405,7 @@ function Admin() {
                           <TableCell>
                             {row.endDate.toDate().toDateString()}
                           </TableCell>
-                          <TableCell><button onClick={() => ChangeStatusToReturned(row)}>Върната</button></TableCell>
+                          <TableCell><Button color="primary" variant="contained" className={classes.clBtn}  onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
 
                         </TableRow>
                       ))

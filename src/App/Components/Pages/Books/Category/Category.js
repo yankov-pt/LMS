@@ -10,8 +10,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import BookCard from '../BookCard'
 
 import Grid from '@material-ui/core/Grid';
@@ -58,7 +56,7 @@ function Category({ match, location }) {
                 return el
             }
         })
-        
+
         setBooks(filteredData)
         setFilteredBooks(filteredData)
     };
@@ -105,8 +103,10 @@ function Category({ match, location }) {
                 className={classes.cards}
             >
 
-                {filteredBooks.map(book => (
-                    <BookCard key={book.id} book={book} />
+                {filteredBooks.map((book, index) => (
+                    <Grid key={index} item xs={12} sm={4} md={3}>
+                        <BookCard key={book.id} book={book} />
+                    </Grid>
                 ))}
             </Grid>
         </Container>

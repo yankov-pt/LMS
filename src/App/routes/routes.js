@@ -12,6 +12,7 @@ const Category = lazy(() => import("../Components/Pages/Books/Category/Category"
 const BookItem = lazy(() => import("../Components/Pages/Books/BookItem/BookItem"))
 const Users = lazy(() => import("../Components/Pages/Admin/UserList"))
 const UserItem = lazy(() => import("../Components/Pages/Admin/UserItem"))
+const EditBookItem = lazy(() => import("../Components/Pages/Books/BookItem/EditBookItem"))
 
 export default [
     { path: "/", name: "Home", component: LandingPage },
@@ -26,5 +27,6 @@ export default [
     { path: '/category/:id', name: 'Category', component: Category },
     { path: '/users', name: 'Users', component: Users },
     { path: '/users/:id', name: 'UserItem', component: UserItem },
+    { path: '/editbook/:id', name: 'BookItem', component: EditBookItem },
 
 ]

@@ -13,7 +13,13 @@ import { bg } from 'date-fns/locale'
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+import EditIcon from '@material-ui/icons/Edit';
 const useStyles = makeStyles((theme) => ({
     cards: {
         maxWidth: '1200px',
@@ -32,18 +38,24 @@ const useStyles = makeStyles((theme) => ({
         width: '100%'
     },
     clendarBox: {
-        position: 'fixed',
         textAlign: 'center'
     },
     clBtn: {
-        marginTop: '16px'
+        margin: '0 0 16px 0'
+    },
+    editIcon:{
+        fontSize: '16px',
+        margin: '0 7px 0 0'
     }
 
 
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
-function BookItem(book) {
+function BookItem() {
     const classes = useStyles();
     const [user, setUser] = useContext(UserContext);
     const [currentBookId, setCurrentBookId] = useState("")
@@ -61,6 +73,12 @@ function BookItem(book) {
             key: 'selection'
         }
     ]);
+    const [da, setDa] = useState({
+        st: "null",
+        en: "null"
+    })
+    const [errorOpen, setErrorOpen] = React.useState(false);
+    const [notificationOpen, setNotificationOpen] = React.useState(false);
     const GetBookById = (uid) => {
         firestore.collection('books').doc(uid).get().then((docRef) => { setItemBook(docRef.data()) })
             .catch((error) => { })
@@ -79,39 +97,51 @@ function BookItem(book) {
     useEffect(() => {
         setLocalState(itemBook)
         var resArray = new Array();
+        var finalArray = new Array();
 
         if (itemBook.bookedDates !== undefined) {
             if (itemBook.bookedDates.length > 0) {
-                console.log('ewe', itemBook.bookedDates)
                 for (var i = 0; i < itemBook.bookedDates.length; i++) {
-                    var currentDate = itemBook.bookedDates[i].startDate;
-                    var t = new Date('Jan 01, 1970'); // Epoch
-                    var start = add(t, {
-                        years: 0,
-                        months: 0,
-                        weeks: 0,
-                        days: 0,
-                        hours: 0,
-                        minutes: 0,
-                        seconds: currentDate.seconds,
-                    });
-                    var end = add(t, {
-                        years: 0,
-                        months: 0,
-                        weeks: 0,
-                        days: 0,
-                        hours: 0,
-                        minutes: 0,
-                        seconds: itemBook.bookedDates[i].endDate.seconds,
-                    });
-                    while (start <= end) {
+                    if (itemBook.bookedDates[i].endDate !== null && itemBook.bookedDates[i].startDate !== null) {
+                        var currentDate = itemBook.bookedDates[i].startDate;
+                        var t = new Date('Jan 01, 1970'); // Epoch
+                        var start = add(t, {
+                            years: 0,
+                            months: 0,
+                            weeks: 0,
+                            days: 0,
+                            hours: 0,
+                            minutes: 0,
+                            seconds: currentDate.seconds,
+                        });
+                        var end = add(t, {
+                            years: 0,
+                            months: 0,
+                            weeks: 0,
+                            days: 0,
+                            hours: 0,
+                            minutes: 0,
+                            seconds: itemBook.bookedDates[i].endDate.seconds,
+                        });
+                        while (start <= end) {
 
-                        start = addDays(start, 1);
-                        resArray.push(start);
+                            start = addDays(start, 1);
+                            resArray.push(start);
 
+                        }
+                    }
+
+                }
+                var count = {};
+                resArray.forEach(function (i) { count[i] = (count[i] || 0) + 1; });
+
+                for (const [key, value] of Object.entries(count)) {
+
+                    if (value >= parseInt(itemBook.copies, 10)) {
+                        finalArray.push(new Date(key))
                     }
                 }
-                setReservedArray(resArray)
+                setReservedArray(finalArray)
 
             }
         }
@@ -123,67 +153,90 @@ function BookItem(book) {
     }, [reservedArray])
 
     useEffect(() => {
+        var s = new Date(myDates[0].startDate).toDateString()
+        var i = new Date(myDates[0].endDate).toDateString()
+        setDa({
+            st: s,
+            en: i
+        })
+    }, [myDates])
+
+    useEffect(() => {
         setLocalUser(user)
     }, [user])
 
     useEffect(() => {
-        console.log('=======', localUser)
     }, [localUser])
     const HandleReserve = (e) => {
-        console.log('here', itemBook)
-        console.log(myDates[0].startDate)
+        var resArray = new Array();
+
+        var start = myDates[0].startDate
+        var end = myDates[0].endDate;
 
 
-        var currentlyReading = localUser.booksCurrentlyInUser
-        var futureReading = localUser.futureBooks
-        var firstday = new Date(myDates[0].startDate)
-        var today = new Date()
-        firestore.collection("operations").add({
-            bookId: currentBookId,
-            user: user,
-            book: localState,
-            startDate: myDates[0].startDate,
-            endDate: myDates[0].endDate,
-            status: 'toBeTaken' //toBeTaken || inUser || returned
-        }).then(
-            (res) => {
-                console.log(res)
-                var newDate = {
-                    startDate: myDates[0].startDate,
-                    endDate: myDates[0].endDate,
-                    user: user.uid,
-                    operationId: res.ua.path.segments[1]
+        while (start <= end) {
+
+            start = addDays(start, 1);
+            resArray.push(start);
+        }
+        console.log(resArray.length)
+
+        if (resArray.length <= 30 && myDates[0].startDate !== null && myDates[0].endDate !== null) {
+            console.log('1111111111111111111111111')
+
+            var futureReading = localUser.futureBooks
+            firestore.collection("operations").add({
+                bookId: currentBookId,
+                user: user,
+                book: localState,
+                startDate: myDates[0].startDate,
+                endDate: myDates[0].endDate,
+                status: 'toBeTaken' //toBeTaken || inUser || returned
+            }).then(
+                (res) => {
+                    var newDate = {
+                        startDate: myDates[0].startDate,
+                        endDate: myDates[0].endDate,
+                        user: user.uid,
+                        operationId: res.ua.path.segments[1]
+                    }
+                    var newBook = {
+                        startDate: myDates[0].startDate,
+                        endDate: myDates[0].endDate,
+                        book: currentBookId,
+                        operationId: res.ua.path.segments[1]
+                    }
+                    var booked = itemBook.bookedDates;
+                    booked.push(newDate)
+
+                    futureReading.push(newBook)
+                    setLocalUser({ ...localUser, futureBooks: futureReading })
+                    setLocalState({ ...localState, bookedDates: booked })
+                    firestore.collection('books').doc(currentBookId).set(localState).then((res) => { GetBookById(currentBookId) })
+                    firestore.collection('users').doc(user.uid).set(localUser)
+                    setNotificationOpen(true)
+                    setMyDates([{ startDate: null, endDate: null, key: 'selection' }]
+                    )
                 }
-                var newBook = {
-                    startDate: myDates[0].startDate,
-                    endDate: myDates[0].endDate,
-                    book: currentBookId,
-                    operationId: res.ua.path.segments[1]
-                }
-                var booked = itemBook.bookedDates;
-                booked.push(newDate)
-                // if (firstday.toDateString() === today.toDateString()) {
-                //     console.log('yes');
-                //     currentlyReading.push(newBook)
-                //     console.log(currentlyReading)
-                //     setLocalUser({ ...localUser, booksCurrentlyInUser: currentlyReading })
+            )
+        }
+        else {
+            setErrorOpen(true)
+        }
 
-                // }
-                // else {
-                console.log('no')
-                futureReading.push(newBook)
-                console.log(futureReading)
-                setLocalUser({ ...localUser, futureBooks: futureReading })
-                // }
-                setLocalState({ ...localState, bookedDates: booked })
-                console.log('22', localState)
-                firestore.collection('books').doc(currentBookId).set(localState).then((res) => { GetBookById(currentBookId) })
-                firestore.collection('users').doc(user.uid).set(localUser)
-            }
-        )
+
 
 
     }
+
+    const handleCloseNot = () => {
+        setNotificationOpen(false)
+
+    };
+    const handleCloseErr = () => {
+        setErrorOpen(false)
+
+    };
 
     return (
         <Container component="main">
@@ -191,11 +244,14 @@ function BookItem(book) {
                 <Grid item xs={8}>
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
-                            <img src={itemBook.cover} alt={itemBook.title} className={classes.cover} />
+                            {itemBook.cover?.length === 0 ?
+                                <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=9a63f7e3-3f7c-492a-9f9e-7a444b43f05a" alt={itemBook.title} className={classes.cover} />
+                                : <img src={itemBook.cover} alt={itemBook.title} className={classes.cover} />}
+
 
                         </Grid>
                         <Grid item xs={8}>
-                            <Typography variant="h1" component="h1">{itemBook.title}</Typography>
+                            <Typography variant="h5" component="h5">{itemBook.title}</Typography>
                             <h2>{itemBook.author}</h2>
                             <p>{itemBook.description}</p>
                             <h2>{itemBook.genre}</h2>
@@ -203,7 +259,16 @@ function BookItem(book) {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={{ textAlign: "center" }}>
+                    {user?.role === 'admin' ?
+                        <Link style={{ textDecoration: 'none' }} to={{
+                            pathname: `/editbook/${currentBookId}`
+                        }}>
+
+                            <Button color="primary" variant="contained" className={classes.clBtn}><EditIcon className={classes.editIcon}/>Edit Book</Button>
+                        </Link>
+
+                        : null}
                     {!user ?
                         <p>Register to book a book</p>
                         :
@@ -211,6 +276,7 @@ function BookItem(book) {
 
                             <DateRangePicker
                                 locale={bg}
+
                                 onChange={item => setMyDates([item.selection])}
                                 showSelectionPreview={true}
                                 moveRangeOnFirstSelection={false}
@@ -223,13 +289,57 @@ function BookItem(book) {
                                 endDatePlaceholder={'До'}
                                 minDate={new Date()}
                                 className={classes.clendar}
+                                rangeColors={['rgb(34,81,100)']}
                             />
                             <Button onClick={(e) => HandleReserve(e)} color="primary" variant="contained" className={classes.clBtn}>Резервирай</Button>
                         </div>
                     }
                 </Grid>
             </Grid>
+            <Dialog
+                open={errorOpen}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseErr}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle id="alert-dialog-slide-title">{"Не можете да запазите книга за повече от 30 дни!"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        Моля променете датите
+          </DialogContentText>
+                </DialogContent>
+                <DialogActions>
 
+                    <Button onClick={handleCloseErr} color="primary">
+                        Ok
+          </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={notificationOpen}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseNot}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle id="alert-dialog-slide-title">{`Успешно запазихте ${itemBook.title}!`}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+
+                        <p>От {da.st} до {da.en}</p>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+
+                    <Button onClick={handleCloseNot} color="primary">
+                        Ok
+          </Button>
+                </DialogActions>
+            </Dialog>
 
 
         </Container >

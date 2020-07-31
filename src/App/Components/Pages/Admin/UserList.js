@@ -12,8 +12,6 @@ import { DateRangePicker } from 'react-date-range';
 import Container from '@material-ui/core/Container';
 import withAuthorization from '../../../Session/withAuthorization'
 import { BrowserRouter as Router, Link, Route, Switch, Redirect, useLocation } from 'react-router-dom';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';

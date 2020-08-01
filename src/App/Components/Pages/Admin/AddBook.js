@@ -84,222 +84,267 @@ function BooksBase() {
     const [description, setDescription] = useState('')
     const [bookedDates, setBookedDates] = useState([])
     const [copies, setCopies] = useState(1)
+    const [location, setLocation] = useState('')
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates) => {
         e.preventDefault();
-        console.log(image)
-        const uploadTask = storage.ref(`images/${image.name}`).put(image);
-        var cover = ''
-        uploadTask.on(
-            "state_changed",
-            snapshot => {
+        console.log(image.name)
+        if (image.name !== undefined) {
+            console.log('1')
+
+            const uploadTask = storage.ref(`images/${image.name}`).put(image);
+            var cover = ''
+            uploadTask.on(
+                "state_changed",
+                snapshot => {
 
 
-            },
-            error => {
-                console.log(error);
-            },
-            () => {
-                storage
-                    .ref("images")
-                    .child(image.name)
-                    .getDownloadURL()
-                    .then(url => {
-                        console.log(url)
-                        cover = url
-                    })
-                    .then(res => {
-                        firestore.collection("books").add({
-                            title,
-                            author,
-                            description,
-                            language,
-                            genre,
-                            cover,
-                            copies,
-                            bookedDates
-                        }).then(res => {
-                            setTitle('');
-                            setAuthor('');
-                            setLanguage('');
-                            setGenre([]);
-                            setImage('');
-                            setDescription('');
-                            setBookedDates([]);
-                            setCopies(1)
-                            document.getElementById("preview").innerHTML = "";
+                },
+                error => {
+                    console.log(error);
+                },
+                () => {
+                    storage
+                        .ref("images")
+                        .child(image.name)
+                        .getDownloadURL()
+                        .then(url => {
+                            console.log(url)
+                            cover = url
+                        })
+                        .then(res => {
+                            firestore.collection("books").add({
+                                title,
+                                author,
+                                description,
+                                language,
+                                genre,
+                                cover,
+                                copies,
+                                bookedDates,
+                                location
+                            }).then(res => {
+                                setTitle('');
+                                setAuthor('');
+                                setLanguage('');
+                                setGenre([]);
+                                setImage('');
+                                setDescription('');
+                                setBookedDates([]);
+                                setCopies(1)
+                                setLocation('')
+                                document.getElementById("preview").innerHTML = "";
 
+                            }
+                            )
                         }
-                        )
-                    }
-                    );
-            }
-        )
-
-    }
-
-    const handleChangeGenre = event => {
-        setGenre(event.target.value);
-    };
-    const HandleUpload = (e) => {
-        e.preventDefault();
-        document.getElementById("image-file").click()
-
-    }
-    const HandlePrev = (evt) => {
-        document.getElementById("preview").innerHTML = "";
-
-
-        setImage(evt.target.files[0])
-        console.log(evt.target.files[0].type)
-        if (evt.target.files[0].type === "image/jpeg" || evt.target.files[0].type === "image/png") {
-            var image = document.createElement('img');
-            console.log(URL.createObjectURL(evt.target.files[0]))
-
-            image.src = URL.createObjectURL(evt.target.files[0]);
-            document.getElementById("preview").append(image);
+                        );
+                }
+            )
         }
+        else {
+console.log('2')
+            firestore.collection("books").add({
+                title,
+                author,
+                description,
+                language,
+                genre,
+                copies,
+                bookedDates,
+                location
+            }).then(res => {
+                setTitle('');
+                setAuthor('');
+                setLanguage('');
+                setGenre([]);
+                setImage('');
+                setDescription('');
+                setBookedDates([]);
+                setCopies(1)
+                setLocation('')
+                document.getElementById("preview").innerHTML = "";
 
-        setImage(evt.target.files[0])
+            }
+            )
+
     }
-    const isInvalid = title === '' || description === '' || language === '' || image === '' || author === '' || genre.length === 0;
-    return (
-        <Container component="main" >
 
-            <Typography variant="h1" component="h1">Добави Книга</Typography>
 
-            <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-            >
-                <Grid item xs={12}>
-                    <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, image, bookedDates)}>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            spacing={5}
+}
 
-                        >
-                            <Grid item xs={3}>
-                                <div id="preview" className={classes.prev}></div>
-                                <Button onClick={(e) => HandleUpload(e)} variant="outlined" color="primary">Добави корица</Button>
-                                <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
-                            </Grid>
-                            <Grid item xs={9}>
-                                <TextField
-                                    name="title"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    label="Заглавие"
-                                    fullWidth={true}
-                                />
-                                <TextField
-                                    name="author"
-                                    value={author}
-                                    onChange={(e) => setAuthor(e.target.value)}
-                                    label="Автор"
-                                    fullWidth={true}
-                                />
-                                <TextField
-                                    name="description"
-                                    value={description}
-                                    multiline={true}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    label="Описание"
-                                    fullWidth
-                                />
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justify="center"
-                                    spacing={2}
+const handleChangeGenre = event => {
+    setGenre(event.target.value);
+};
+const HandleUpload = (e) => {
+    e.preventDefault();
+    document.getElementById("image-file").click()
 
-                                >
-                                    <Grid item xs={6}>
+}
+const HandlePrev = (evt) => {
+    document.getElementById("preview").innerHTML = "";
 
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="demo-mutiple-chip-label">Жанрове</InputLabel>
-                                            <Select
-                                                labelId="demo-mutiple-chip-label"
-                                                id="demo-mutiple-chip"
-                                                multiple
-                                                value={genre}
-                                                onChange={handleChangeGenre}
-                                                input={<Input id="select-multiple-chip" />}
-                                                renderValue={selected => (
-                                                    <div className={classes.chips}>
-                                                        {selected.map(value => (
-                                                            <Chip key={value} label={value} className={classes.chip} />
-                                                        ))}
-                                                    </div>
-                                                )}
-                                                MenuProps={{
-                                                    PaperProps: {
-                                                        style: {
-                                                            maxHeight: 48 * 4.5 + 8,
-                                                            width: 250,
-                                                            position: 'absolute',
-                                                        }
+
+    setImage(evt.target.files[0])
+    console.log(evt.target.files[0].type)
+    if (evt.target.files[0].type === "image/jpeg" || evt.target.files[0].type === "image/png") {
+        var image = document.createElement('img');
+        console.log(URL.createObjectURL(evt.target.files[0]))
+
+        image.src = URL.createObjectURL(evt.target.files[0]);
+        document.getElementById("preview").append(image);
+    }
+
+    setImage(evt.target.files[0])
+}
+const isInvalid = title === '' || language === '' || author === '' || genre.length === 0;
+return (
+    <Container component="main" >
+
+        <Typography variant="h1" component="h1">Добави Книга</Typography>
+
+        <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+        >
+            <Grid item xs={12}>
+                <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, image, bookedDates)}>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        spacing={5}
+
+                    >
+                        <Grid item xs={3}>
+                            <div id="preview" className={classes.prev}></div>
+                            <Button onClick={(e) => HandleUpload(e)} variant="outlined" color="primary">Добави корица</Button>
+                            <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField
+                                name="title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                label="Заглавие"
+                                fullWidth={true}
+                            />
+                            <TextField
+                                name="author"
+                                value={author}
+                                onChange={(e) => setAuthor(e.target.value)}
+                                label="Автор"
+                                fullWidth={true}
+                            />
+                            <TextField
+                                name="description"
+                                value={description}
+                                multiline={true}
+                                onChange={(e) => setDescription(e.target.value)}
+                                label="Описание"
+                                fullWidth
+                            />
+                            <Grid
+                                container
+                                direction="row"
+                                justify="center"
+                                spacing={2}
+
+                            >
+                                <Grid item xs={6}>
+
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="demo-mutiple-chip-label">Жанрове</InputLabel>
+                                        <Select
+                                            labelId="demo-mutiple-chip-label"
+                                            id="demo-mutiple-chip"
+                                            multiple
+                                            value={genre}
+                                            onChange={handleChangeGenre}
+                                            input={<Input id="select-multiple-chip" />}
+                                            renderValue={selected => (
+                                                <div className={classes.chips}>
+                                                    {selected.map(value => (
+                                                        <Chip key={value} label={value} className={classes.chip} />
+                                                    ))}
+                                                </div>
+                                            )}
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 48 * 4.5 + 8,
+                                                        width: 250,
+                                                        position: 'absolute',
                                                     }
-                                                }}
-                                            >
-                                                {genresList.map(name => (
-                                                    <MenuItem
-                                                        key={name}
-                                                        value={name}
-                                                        style={getStyles(name, genre, theme)}
-                                                    >
-                                                        {name}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-
-                                    <Grid item xs={3}>
-
-                                        <FormControl className={classes.formControl}>
-
-                                            <InputLabel id="demo-simple-select-helper-label">Език</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-helper-label"
-                                                id="demo-simple-select-helper"
-                                                value={language}
-                                                onChange={(e) => setLanguage(e.target.value)}
-                                            >
-
-                                                <MenuItem value={"BG"}>Български</MenuItem>
-                                                <MenuItem value={"EN"}>Английски</MenuItem>
-                                                <MenuItem value={"RU"}>Руски</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={3}>
-
-
-                                        <TextField
-                                            name="copies"
-                                            value={copies}
-                                            multiline={true}
-                                            onChange={(e) => setCopies(e.target.value)}
-                                            label="Екземпляри"
-                                            fullWidth
-                                        />
-                                    </Grid>
+                                                }
+                                            }}
+                                        >
+                                            {genresList.map(name => (
+                                                <MenuItem
+                                                    key={name}
+                                                    value={name}
+                                                    style={getStyles(name, genre, theme)}
+                                                >
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
 
+                                <Grid item xs={3}>
+
+                                    <FormControl className={classes.formControl}>
+
+                                        <InputLabel id="demo-simple-select-helper-label">Език</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={language}
+                                            onChange={(e) => setLanguage(e.target.value)}
+                                        >
+
+                                            <MenuItem value={"BG"}>Български</MenuItem>
+                                            <MenuItem value={"EN"}>Английски</MenuItem>
+                                            <MenuItem value={"RU"}>Руски</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+
+
+                                    <TextField
+                                        name="copies"
+                                        value={copies}
+                                        multiline={true}
+                                        onChange={(e) => setCopies(e.target.value)}
+                                        label="Екземпляри"
+                                        fullWidth
+                                    />
+                                </Grid>
 
                             </Grid>
-                            <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Добави книга</Button>
+                            <Grid item xs={3}>
+                                <TextField
+                                    name="location"
+                                    value={location}
+                                    multiline={true}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    label="Рафт"
+                                    fullWidth
+                                />
+                            </Grid>
+
                         </Grid>
-                    </form>
-                </Grid>
+                        <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Добави книга</Button>
+                    </Grid>
+                </form>
             </Grid>
-        </Container >
-    );
+        </Grid>
+    </Container >
+);
 }
 
 

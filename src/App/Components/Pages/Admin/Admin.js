@@ -174,8 +174,6 @@ function Admin() {
     console.log(newCurrent)
     console.log(newReturned)
     firestore.collection('users').doc(operation.user.uid).set({ ...data.data(), booksCurrentlyInUser: newCurrent, returnedBooks: newReturned })
-
-
     firestore.collection('operations').doc(operation.id).set({ ...operation, status: 'returned' }).then(fetchData())
     fetchData();
   }

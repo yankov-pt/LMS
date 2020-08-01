@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     clBtn: {
         margin: '0 0 16px 0'
     },
-    editIcon:{
+    editIcon: {
         fontSize: '16px',
         margin: '0 7px 0 0'
     }
@@ -102,34 +102,37 @@ function BookItem() {
         if (itemBook.bookedDates !== undefined) {
             if (itemBook.bookedDates.length > 0) {
                 for (var i = 0; i < itemBook.bookedDates.length; i++) {
-                    if (itemBook.bookedDates[i].endDate !== null && itemBook.bookedDates[i].startDate !== null) {
-                        var currentDate = itemBook.bookedDates[i].startDate;
-                        var t = new Date('Jan 01, 1970'); // Epoch
-                        var start = add(t, {
-                            years: 0,
-                            months: 0,
-                            weeks: 0,
-                            days: 0,
-                            hours: 0,
-                            minutes: 0,
-                            seconds: currentDate.seconds,
-                        });
-                        var end = add(t, {
-                            years: 0,
-                            months: 0,
-                            weeks: 0,
-                            days: 0,
-                            hours: 0,
-                            minutes: 0,
-                            seconds: itemBook.bookedDates[i].endDate.seconds,
-                        });
-                        while (start <= end) {
+                    if (itemBook.bookedDates[i].status !== 'returned') {
+                        if (itemBook.bookedDates[i].endDate !== null && itemBook.bookedDates[i].startDate !== null) {
+                            var currentDate = itemBook.bookedDates[i].startDate;
+                            var t = new Date('Jan 01, 1970'); // Epoch
+                            var start = add(t, {
+                                years: 0,
+                                months: 0,
+                                weeks: 0,
+                                days: 0,
+                                hours: 0,
+                                minutes: 0,
+                                seconds: currentDate.seconds,
+                            });
+                            var end = add(t, {
+                                years: 0,
+                                months: 0,
+                                weeks: 0,
+                                days: 0,
+                                hours: 0,
+                                minutes: 0,
+                                seconds: itemBook.bookedDates[i].endDate.seconds,
+                            });
+                            while (start <= end) {
 
-                            start = addDays(start, 1);
-                            resArray.push(start);
+                                start = addDays(start, 1);
+                                resArray.push(start);
 
+                            }
                         }
                     }
+
 
                 }
                 var count = {};
@@ -194,17 +197,21 @@ function BookItem() {
                 status: 'toBeTaken' //toBeTaken || inUser || returned
             }).then(
                 (res) => {
+                    console.log(res.id)
                     var newDate = {
                         startDate: myDates[0].startDate,
                         endDate: myDates[0].endDate,
                         user: user.uid,
-                        operationId: res.ua.path.segments[1]
+                        operationId: res.id,
+                        status: 'normal'
+
                     }
                     var newBook = {
                         startDate: myDates[0].startDate,
                         endDate: myDates[0].endDate,
                         book: currentBookId,
-                        operationId: res.ua.path.segments[1]
+                        operationId: res.id,
+                        status: 'normal'
                     }
                     var booked = itemBook.bookedDates;
                     booked.push(newDate)
@@ -265,7 +272,7 @@ function BookItem() {
                             pathname: `/editbook/${currentBookId}`
                         }}>
 
-                            <Button color="primary" variant="contained" className={classes.clBtn}><EditIcon className={classes.editIcon}/>Edit Book</Button>
+                            <Button color="primary" variant="contained" className={classes.clBtn}><EditIcon className={classes.editIcon} />Edit Book</Button>
                         </Link>
 
                         : null}

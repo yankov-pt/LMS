@@ -6,6 +6,7 @@ import { firestore } from '../../Firebase/firebase'
 import withAuthorization from '../../../Session/withAuthorization'
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -64,12 +65,14 @@ function UserItem(book) {
         var newArr = []
         if (user.booksCurrentlyInUser) {
             user.booksCurrentlyInUser.map(el => {
+                console.log(el)
                 firestore.collection('books').doc(el.book).get().then(data => {
                     var newelem = {
                         bookID: el.book,
                         startDate: el.startDate,
                         endDate: el.endDate,
-                        book: data.data()
+                        book: data.data(),
+                        operationId: el.operationId
                     }
                     setCurrentBooks(old => [...old, newelem])
                 })
@@ -83,7 +86,9 @@ function UserItem(book) {
                         bookID: el.book,
                         startDate: el.startDate,
                         endDate: el.endDate,
-                        book: data.data()
+                        book: data.data(),
+                        operationId: el.operationId
+
                     }
                     setFutureBooks(old => [...old, newelem])
                 })
@@ -97,7 +102,8 @@ function UserItem(book) {
                         bookID: el.book,
                         startDate: el.startDate,
                         endDate: el.endDate,
-                        book: data.data()
+                        book: data.data(),
+                        operationId: el.operationId
                     }
                     setPastBooks(old => [...old, newelem])
                 })
@@ -105,8 +111,38 @@ function UserItem(book) {
             })
         }
     }, [user])
+    const fetchData = async () => {
+        const data = await firestore.collection("operations").get();
+    };
 
+    function search(nameKey, myArray) {
+        for (var i = 0; i < myArray.length; i++) {
+            if (myArray[i].operationId === nameKey) {
+                myArray[i].status = 'returned'
+                return myArray
+            }
+        }
+    }
+    const ChangeStatusToReturned = async (row) => {
+        console.log(user)
+        console.log(row.operationId)
+        const data = await firestore.collection('users').doc(user.uid).get()
 
+        const book = await firestore.collection('books').doc(row.bookID).get()
+        var operation = await firestore.collection('operations').doc(row.operationId).get()
+
+        var removedItem = data.data().booksCurrentlyInUser.filter(el => el.operationId === row.operationId)
+        var newCurrent = data.data().booksCurrentlyInUser.filter(el => el.operationId !== row.operationId)
+        var newReturned = data.data().returnedBooks
+        newReturned.push(removedItem[0])
+        var bookdates = await firestore.collection('books').doc(row.bookID).get()
+
+        var resultObject = search(row.operationId, bookdates.data().bookedDates);
+        firestore.collection('users').doc(user.uid).set({ ...data.data(), booksCurrentlyInUser: newCurrent, returnedBooks: newReturned })
+        firestore.collection('operations').doc(row.operationId).set({ ...operation.data(), status: 'returned' }).then(fetchData())
+        firestore.collection('books').doc(row.bookID).set({ ...bookdates.data(), bookedDates: resultObject }).then(fetchData())
+        fetchData();
+    }
     useEffect(() => {
         console.log(currentBooks)
     }, [currentBooks])
@@ -130,6 +166,7 @@ function UserItem(book) {
                                         <TableCell>Автор</TableCell>
                                         <TableCell>От дата</TableCell>
                                         <TableCell>До дата</TableCell>
+                                        <TableCell>Action</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -147,6 +184,8 @@ function UserItem(book) {
                                                 </TableCell>
                                                 <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
                                                 <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
+                                                <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
+
                                             </TableRow>
                                         ))
                                         : null

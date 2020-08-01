@@ -95,8 +95,8 @@ function Books(searchWord) {
                 className={classes.cards}
             >
                 {filteredBooks.length > 0
-                    ? filteredBooks.map((book, index) => (
-                        <Grid key={index} item xs={12} sm={4} md={3}>
+                    ? filteredBooks.map((book) => (
+                        <Grid key={book.id} item xs={12} sm={4} md={3}>
                             <BookCard book={book} />
                         </Grid>
                     ))

@@ -179,8 +179,7 @@ function EditBookItem() {
                 language,
                 genre,
                 copies,
-                bookedDates,
-                cover: image
+                bookedDates
 
             })
         }

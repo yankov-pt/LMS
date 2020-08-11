@@ -25,7 +25,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { useTheme } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles((theme) => ({
     prev: {
         '& img':
@@ -48,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
         margin: 1
     },
     noLabel: {
+    },
+    coverImage: {
+        width: '100%'
     }
 }));
 
@@ -94,6 +98,8 @@ function EditBookItem() {
     const [bookedDates, setBookedDates] = useState([])
     const [copies, setCopies] = useState(1)
     const [notificationOpen, setNotificationOpen] = React.useState(false);
+    const [location, setLocation] = useState('')
+
     const GetBookById = (uid) => {
         firestore.collection('books').doc(uid).get().then((docRef) => {
             setItemBook(docRef.data())
@@ -104,6 +110,7 @@ function EditBookItem() {
             setImage(docRef.data().cover)
             setDescription(docRef.data().description)
             setCopies(docRef.data().copies)
+            setLocation(docRef.data().location)
         })
             .catch((error) => { })
     }
@@ -118,9 +125,8 @@ function EditBookItem() {
 
     }, [])
 
-    const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates) => {
+    const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates, location) => {
         e.preventDefault();
-        console.log(image.name)
 
         if (image?.name?.length > 0) {
             console.log(image)
@@ -155,33 +161,43 @@ function EditBookItem() {
                                 genre,
                                 cover,
                                 copies,
-                                bookedDates
+                                bookedDates,
+                                location
 
                             })
                         }
                         ).then(r => {
-                            return (
-                                <Redirect
-                                    to={{
-                                        pathname: "/books",
+                            toast.success(`Успешно променихте ${title}!`)
+                        })
+                        .catch(err => {
+                            toast.error(`Грешка!`)
 
-                                    }} />
-                            )
-                        });
+                        })
                 }
             )
         }
         else {
             firestore.collection("books").doc(currentBookId).set({
-                ...itemBook, title,
+                ...itemBook,
+                title,
                 author,
                 description,
                 language,
                 genre,
                 copies,
-                bookedDates
+                bookedDates,
+                location,
+                cover: '',
+
+
+            }).then(r => {
+                toast.success(`Успешно променихте ${title}!`)
 
             })
+                .catch(err => {
+                    toast.error(`Грешка!`)
+
+                })
         }
 
 
@@ -206,14 +222,21 @@ function EditBookItem() {
 
     };
 
-    const handleCloseNot = () => {
-        setNotificationOpen(false)
 
-    };
-    const isInvalid = title === '' || description === '' || language === '' || copies <= 0 || author === '' || genre.length === 0;
+    const isInvalid = title === '' || language === '' || copies <= 0 || author === '' || genre.length === 0;
 
     return (
         <Container component="main">
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover />
             <Typography variant="h1" component="h1">Редактирай Книга</Typography>
 
             <Grid
@@ -223,7 +246,7 @@ function EditBookItem() {
                 alignItems="center"
             >
                 <Grid item xs={12}>
-                    <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, imgUpl, bookedDates)}>
+                    <form className="forms" onSubmit={(e) => HandleSubmit(e, title, author, description, language, genre, imgUpl, bookedDates, location)}>
                         <Grid
                             container
                             direction="row"
@@ -233,7 +256,7 @@ function EditBookItem() {
                         >
                             <Grid item xs={3}>
                                 {image?.length > 0 ?
-                                    <img src={image} alt={title} />
+                                    <img src={image} className={classes.coverImage} alt={title} />
                                     : null
                                 }
 
@@ -342,8 +365,18 @@ function EditBookItem() {
                                             fullWidth
                                         />
                                     </Grid>
-                                </Grid>
 
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        name="location"
+                                        value={location}
+                                        multiline={true}
+                                        onChange={(e) => setLocation(e.target.value)}
+                                        label="Рафт"
+                                        fullWidth
+                                    />
+                                </Grid>
 
                             </Grid>
                             <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Редактирай книга</Button>

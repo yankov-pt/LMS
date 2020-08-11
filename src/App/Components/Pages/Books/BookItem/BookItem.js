@@ -251,9 +251,11 @@ function BookItem() {
                 <Grid item xs={8}>
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
-                            {itemBook.cover?.length === 0 ?
-                                <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=9a63f7e3-3f7c-492a-9f9e-7a444b43f05a" alt={itemBook.title} className={classes.cover} />
-                                : <img src={itemBook.cover} alt={itemBook.title} className={classes.cover} />}
+                            {itemBook.cover?.length > 0 ?
+                                <img src={itemBook.cover} alt={itemBook.title} className={classes.cover} />
+                                : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=9a63f7e3-3f7c-492a-9f9e-7a444b43f05a" alt={itemBook.title} className={classes.cover} />
+
+                            }
 
 
                         </Grid>

@@ -1,5 +1,5 @@
 
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useRef } from 'react';
 import { UserContext } from '../../../Context/userContext'
 import withAuthorization from '../../../Session/withAuthorization';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
@@ -20,6 +20,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import XLSX from "xlsx"
 
 const useStyles = makeStyles((theme) => ({
     prev: {
@@ -48,6 +49,29 @@ const useStyles = makeStyles((theme) => ({
         color: 'white'
     }
 }));
+
+const SheetJSFT = [
+    "xlsx",
+    "xlsb",
+    "xlsm",
+    "xls",
+    "xml",
+    "csv",
+    "txt",
+    "ods",
+    "fods",
+    "uos",
+    "sylk",
+    "dif",
+    "dbf",
+    "prn",
+    "qpw",
+    "123",
+    "wb*",
+    "wq*",
+    "html",
+    "htm"
+]
 const genresList = [
     'Българска и световна литература',
     'Българска филология и начална педагогика',
@@ -77,6 +101,36 @@ function AddBook() {
         <Books />
     );
 }
+const getXlsxDocument = evt => {
+    var files = evt.target.files; // FileList object
+
+    // use the 1st file from the list
+    var file = files[0];
+
+    const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
+    var err = false
+    reader.onload = e => {
+        /* Parse data */
+        const bstr = e.target.result;
+        const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
+        /* Get first worksheet */
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        /* Convert array of arrays */
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        /* Update state */
+        data.map(item => {
+            console.log(item)
+        })
+    }
+
+
+    if (rABS) reader.readAsBinaryString(file);
+    else reader.readAsArrayBuffer(file);
+
+};
+
 function BooksBase() {
     const classes = useStyles();
     const theme = useTheme();
@@ -89,6 +143,7 @@ function BooksBase() {
     const [bookedDates, setBookedDates] = useState([])
     const [copies, setCopies] = useState(1)
     const [location, setLocation] = useState('')
+    const inputFileRef = useRef(null);
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates) => {
         e.preventDefault();
@@ -369,6 +424,15 @@ function BooksBase() {
                             <Button disabled={isInvalid} type="submit" variant="contained" color="primary">Добави книга</Button>
                         </Grid>
                     </form>
+                    <input
+                        type="file"
+                        className="form-control"
+                        id="file"
+                        ref={inputFileRef}
+                        accept={SheetJSFT}
+                        onChange={getXlsxDocument}
+                        style={{ display: 'none' }}
+                    />
                 </Grid>
             </Grid>
         </Container >

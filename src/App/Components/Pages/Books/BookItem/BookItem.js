@@ -155,14 +155,14 @@ function BookItem() {
         setReservedDates(reservedArray)
     }, [reservedArray])
 
-    useEffect(() => {
-        var s = new Date(myDates[0].startDate).toDateString()
-        var i = new Date(myDates[0].endDate).toDateString()
-        setDa({
-            st: s,
-            en: i
-        })
-    }, [myDates])
+    // useEffect(() => {
+    //     var s = new Date(myDates[0].startDate).toDateString()
+    //     var i = new Date(myDates[0].endDate).toDateString()
+    //     setDa({
+    //         st: s,
+    //         en: i
+    //     })
+    // }, [myDates])
 
     useEffect(() => {
         setLocalUser(user)
@@ -222,6 +222,22 @@ function BookItem() {
                     firestore.collection('books').doc(currentBookId).set(localState).then((res) => { GetBookById(currentBookId) })
                     firestore.collection('users').doc(user.uid).set(localUser)
                     setNotificationOpen(true)
+                    var s = new Date(myDates[0].startDate).toLocaleDateString('bg-BG', {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "numeric"
+                    })
+                    var i = new Date(myDates[0].endDate).toLocaleDateString('bg-BG', {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "numeric"
+                    })
+                    setDa({
+                        st: s,
+                        en: i
+                    })
                     setMyDates([{ startDate: null, endDate: null, key: 'selection' }]
                     )
                 }
@@ -237,6 +253,10 @@ function BookItem() {
     }
 
     const handleCloseNot = () => {
+        setDa({
+            st: null,
+            en: null
+        })
         setNotificationOpen(false)
 
     };

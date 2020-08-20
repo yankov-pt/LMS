@@ -75,8 +75,12 @@ function UserList() {
             setFUsers(users)
         }
         else {
-            setFUsers(filteredArray.filter(card =>
-                card.uid.includes(searchUser) || card.email.toLowerCase().includes(searchUser.toLowerCase()) || card.username.toLowerCase().includes(searchUser.toLowerCase()) || card.role.toLowerCase().includes(searchUser.toLowerCase())))
+            filteredArray.map(item => console.log(item))
+            setFUsers(users.filter(user =>
+                user?.uid?.includes(searchUser) 
+                || user?.email?.toLowerCase().includes(searchUser.toLowerCase()) 
+                || user?.username?.toLowerCase().includes(searchUser.toLowerCase()) 
+                || user?.role?.toLowerCase().includes(searchUser.toLowerCase())))
         }
     }, [searchUser])
     return (

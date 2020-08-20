@@ -37,15 +37,18 @@ function Books(searchWord) {
 
             }
             else {
+                console.log()
                 setFilteredBooks(data.docs.map(doc => ({ ...doc.data(), id: doc.id })))
 
             }
         };
 
-        fetchData();
-        console.log(books)
+        fetchData()
+        // console.log(books)
     }, []);
-
+    useEffect(() => {
+        console.log(filteredBooks)
+    }, [filteredBooks])
     useEffect(() => {
         console.log(searchBook)
         let filteredArray = books

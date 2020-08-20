@@ -254,6 +254,7 @@ function Admin() {
                   <TableHead>
                     <TableRow>
                       <TableCell>Book</TableCell>
+                      <TableCell>Location</TableCell>
                       <TableCell>User</TableCell>
                       <TableCell>From Date</TableCell>
                       <TableCell>To date</TableCell>
@@ -269,6 +270,9 @@ function Admin() {
                               {row.book.title}
                             </Link>
                           </TableCell>
+                          <TableCell component="th" scope="row">
+                            {row.book.location}
+                          </TableCell>
                           <TableCell>
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
                               {row.user.username}
@@ -281,8 +285,8 @@ function Admin() {
                             {row.endDate.toDate().toDateString()}
                           </TableCell>
                           <TableCell>
-                          <Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToTaken(row)} >Взета</Button>
-                            </TableCell>
+                            <Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToTaken(row)} >Взета</Button>
+                          </TableCell>
                         </TableRow>
                       ))
                       : null
@@ -300,7 +304,7 @@ function Admin() {
                     За връщане
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     className={classes.searchBar}
                     id="standard-search"
@@ -316,6 +320,8 @@ function Admin() {
                   <TableHead>
                     <TableRow>
                       <TableCell>Book</TableCell>
+                      <TableCell>Location</TableCell>
+
                       <TableCell>User</TableCell>
                       <TableCell>From Date</TableCell>
                       <TableCell>To date</TableCell>
@@ -330,6 +336,9 @@ function Admin() {
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
                               {row.book.title}
                             </Link>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {row.book.location}
                           </TableCell>
                           <TableCell>
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
@@ -356,7 +365,7 @@ function Admin() {
           <Grid item xs={6}>
             <Paper className={classes.paper}>
               <Grid container spacing={2} >
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <Typography variant="h4" component="div">
                     Просрочени
                   </Typography>
@@ -377,6 +386,8 @@ function Admin() {
                   <TableHead>
                     <TableRow>
                       <TableCell>Book</TableCell>
+                      <TableCell>Location</TableCell>
+
                       <TableCell>User</TableCell>
                       <TableCell>From Date</TableCell>
                       <TableCell>To date</TableCell>
@@ -392,6 +403,9 @@ function Admin() {
                               {row.book.title}
                             </Link>
                           </TableCell>
+                          <TableCell component="th" scope="row">
+                            {row.book.location}
+                          </TableCell>
                           <TableCell>
                             <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
                               {row.user.username}
@@ -403,7 +417,7 @@ function Admin() {
                           <TableCell>
                             {row.endDate.toDate().toDateString()}
                           </TableCell>
-                          <TableCell><Button color="primary" variant="contained" className={classes.clBtn}  onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
+                          <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
 
                         </TableRow>
                       ))

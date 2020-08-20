@@ -84,8 +84,32 @@ const genresList = [
     'Речници',
     'IT и програмиране',
     'Физика и математика',
-    'Анатомия и биология'
+    'Анатомия и биология',
+    'Университетски Записки'
 ];
+const languagesList = [
+    {
+        code: 'BG',
+        title: 'Български'
+    },
+    {
+        code: 'EN',
+        title: 'Английски'
+    },
+    {
+        code: 'RU',
+        title: 'Руски'
+    },
+    {
+        code: 'DE',
+        title: 'Немси'
+    },
+    {
+        code: 'FR',
+        title: 'Френски'
+    },
+];
+
 
 
 function getStyles(name, personName, theme) {
@@ -101,42 +125,14 @@ function AddBook() {
         <Books />
     );
 }
-const getXlsxDocument = evt => {
-    var files = evt.target.files; // FileList object
 
-    // use the 1st file from the list
-    var file = files[0];
-
-    const reader = new FileReader();
-    const rABS = !!reader.readAsBinaryString;
-    var err = false
-    reader.onload = e => {
-        /* Parse data */
-        const bstr = e.target.result;
-        const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
-        /* Get first worksheet */
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        /* Convert array of arrays */
-        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        /* Update state */
-        data.map(item => {
-            console.log(item)
-        })
-    }
-
-
-    if (rABS) reader.readAsBinaryString(file);
-    else reader.readAsArrayBuffer(file);
-
-};
 
 function BooksBase() {
     const classes = useStyles();
     const theme = useTheme();
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
-    const [language, setLanguage] = useState('')
+    const [language, setLanguage] = useState([])
     const [genre, setGenre] = useState([])
     const [image, setImage] = useState('')
     const [description, setDescription] = useState('')
@@ -144,6 +140,67 @@ function BooksBase() {
     const [copies, setCopies] = useState(1)
     const [location, setLocation] = useState('')
     const inputFileRef = useRef(null);
+    const [data, setData] = useState([])
+    const [uploadErrors, setUploadErrors] = useState([])
+    const batch = firestore.batch()
+    useEffect(() => {
+        console.log(data)
+    }, [data])
+
+    const getXlsxDocument = evt => {
+        var files = evt.target.files; // FileList object
+
+        // use the 1st file from the list
+        var file = files[0];
+
+        const reader = new FileReader();
+        const rABS = !!reader.readAsBinaryString;
+        var err = false
+        reader.onload = e => {
+            /* Parse data */
+            const bstr = e.target.result;
+            const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
+            /* Get first worksheet */
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            /* Convert array of arrays */
+            const booksData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            /* Update state */
+            var newArr = []
+            booksData.map(item => {
+                console.log(item)
+                const genres1 = item[2].split(', ');
+                const languages1 = item[5].split(', ');
+                newArr.push(
+                    {
+                        title: item[0],
+                        author: item[1],
+                        description: '',
+                        language: languages1,
+                        genre: genres1,
+                        copies: item[4],
+                        bookedDates: [],
+                        location: item[3]
+                    }
+                )
+            })
+            setData(newArr)
+        }
+
+
+        if (rABS) reader.readAsBinaryString(file);
+        else reader.readAsArrayBuffer(file);
+
+    };
+    const bulkUpload = () => {
+        data.map((doc) => {
+            batch.set(firestore.collection('books').doc(), doc)
+        })
+        batch.commit().then(function () {
+            console.log('done?')
+        })
+    }
+
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates) => {
         e.preventDefault();
@@ -189,7 +246,7 @@ function BooksBase() {
 
                                 setTitle('');
                                 setAuthor('');
-                                setLanguage('');
+                                setLanguage([]);
                                 setGenre([]);
                                 setImage('');
                                 setDescription('');
@@ -227,7 +284,7 @@ function BooksBase() {
                 ))
                 setTitle('');
                 setAuthor('');
-                setLanguage('');
+                setLanguage([]);
                 setGenre([]);
                 setImage('');
                 setDescription('');
@@ -249,6 +306,9 @@ function BooksBase() {
 
     const handleChangeGenre = event => {
         setGenre(event.target.value);
+    };
+    const handleChangeLanguage = event => {
+        setLanguage(event.target.value);
     };
     const HandleUpload = (e) => {
         e.preventDefault();
@@ -382,16 +442,40 @@ function BooksBase() {
                                         <FormControl className={classes.formControl}>
 
                                             <InputLabel id="demo-simple-select-helper-label">Език</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-helper-label"
-                                                id="demo-simple-select-helper"
-                                                value={language}
-                                                onChange={(e) => setLanguage(e.target.value)}
-                                            >
 
-                                                <MenuItem value={"BG"}>Български</MenuItem>
-                                                <MenuItem value={"EN"}>Английски</MenuItem>
-                                                <MenuItem value={"RU"}>Руски</MenuItem>
+                                            <Select
+                                                labelId="demo-mutiple-chip-label"
+                                                id="demo-mutiple-chip"
+                                                multiple
+                                                value={language}
+                                                onChange={handleChangeLanguage}
+                                                input={<Input id="select-multiple-chip" />}
+                                                renderValue={selected => (
+                                                    <div className={classes.chips}>
+                                                        {selected.map(value => (
+                                                            <Chip key={value} label={value} className={classes.chip} />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                MenuProps={{
+                                                    PaperProps: {
+                                                        style: {
+                                                            maxHeight: 48 * 4.5 + 8,
+                                                            width: 250,
+                                                            position: 'absolute',
+                                                        }
+                                                    }
+                                                }}
+                                            >
+                                                {languagesList.map(name => (
+                                                    <MenuItem
+                                                        key={name}
+                                                        value={name.code}
+                                                        style={getStyles(name, genre, theme)}
+                                                    >
+                                                        {name.title}
+                                                    </MenuItem>
+                                                ))}
                                             </Select>
                                         </FormControl>
                                     </Grid>
@@ -431,8 +515,9 @@ function BooksBase() {
                         ref={inputFileRef}
                         accept={SheetJSFT}
                         onChange={getXlsxDocument}
-                        style={{ display: 'none' }}
                     />
+                    <Button disabled={data.length === 0} type="submit" onClick={() => bulkUpload()} variant="contained" color="primary">Качи</Button>
+
                 </Grid>
             </Grid>
         </Container >

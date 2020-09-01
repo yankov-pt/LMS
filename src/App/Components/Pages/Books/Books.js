@@ -1,5 +1,5 @@
 
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { firestore } from '../../Firebase/firebase'
 import Grid from '@material-ui/core/Grid';
 import BookCard from './BookCard'
@@ -10,7 +10,6 @@ import Container from '@material-ui/core/Container';
 import Chip from '@material-ui/core/Chip';
 
 import algoliasearch from 'algoliasearch/lite';
-import React, { Component } from 'react';
 import {
     InstantSearch,
     connectSearchBox,

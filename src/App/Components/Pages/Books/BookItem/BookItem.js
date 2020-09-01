@@ -268,18 +268,18 @@ function BookItem() {
     return (
         <Container component="main">
             <Grid container spacing={3}>
-                <Grid item xs={8}>
+                <Grid item lg={8} md={6} xs={12} >
                     <Grid container spacing={3}>
-                        <Grid item xs={4}>
+                        <Grid item md={4} xs={12}>
                             {itemBook?.cover?.length > 0 ?
                                 <img src={itemBook?.cover} alt={itemBook?.title} className={classes.cover} />
-                                : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=9a63f7e3-3f7c-492a-9f9e-7a444b43f05a" alt={itemBook.title} className={classes.cover} />
+                                : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=31d32428-3e76-4226-ba13-78e294a86f0e" alt={itemBook.title} className={classes.cover} />
 
                             }
 
 
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item md={8} xs={12}>
                             <Typography variant="h5" component="h5">{itemBook?.title}</Typography>
                             <h2>{itemBook?.author}</h2>
                             <p>{itemBook?.description}</p>
@@ -288,7 +288,7 @@ function BookItem() {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item xs={4} style={{ textAlign: "center" }}>
+                <Grid item lg={4} md={6} xs={12} style={{ textAlign: "center" }}>
                     {user?.role === 'admin' ?
                         <Link style={{ textDecoration: 'none' }} to={{
                             pathname: `/editbook/${currentBookId}`

@@ -50,13 +50,10 @@ function Category({ match, location }) {
     const [searchBook, setSearchBook] = useState('')
 
     const fetchData = async (res) => {
-        const data = await firestore.collection("books").get()
-        const filteredData = data.docs.map(doc => ({ ...doc.data(), id: doc.id })).filter(el => {
-            if (el.genre.includes(res)) {
-                return el
-            }
-        })
+        const data = await firestore.collection("books")
+            .where("genre", "array-contains", res).get()
 
+        const filteredData = data.docs.map(doc => ({ ...doc.data(), id: doc.id }))
         setBooks(filteredData)
         setFilteredBooks(filteredData)
     };

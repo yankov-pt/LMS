@@ -87,9 +87,9 @@ function BookCard({ book }) {
                 pathname: book.id !== undefined ? `/books/${book.id}` : `/books/${book.objectID}`
             }}>
 
-                {book.cover?.length > 0 ?
+                {book?.cover?.length > 0 ?
                     <img src={book.cover} alt={book.title} className={classes.cover} />
-                    : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=9a63f7e3-3f7c-492a-9f9e-7a444b43f05a" alt={book.title} className={classes.cover} />
+                    : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=31d32428-3e76-4226-ba13-78e294a86f0e" alt={book.title} className={classes.cover} />
                 }
             </Link>
             <div className={classes.textCont}>

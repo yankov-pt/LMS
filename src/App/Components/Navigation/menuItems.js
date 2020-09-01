@@ -9,7 +9,7 @@ export default [
             { path: "/category/Българска филология и начална педагогика", name: "Българска филология и начална педагогика", withAuth: false },
             { path: "/category/Биографии и други", name: "Биографии и други", withAuth: false },
             { path: "/category/Съвременна литература", name: "Съвременна литература", withAuth: false },
-            { path: "/category/Право и политологи", name: "Право и политологи", withAuth: false },
+            { path: "/category/Право и Политология", name: "Право и Политология", withAuth: false },
             { path: "/category/Икономика и бизнес", name: "Икономика и бизнес", withAuth: false },
             { path: "/category/География и история", name: "География и история", withAuth: false },
             { path: "/category/Енциклопедии", name: "Енциклопедии", withAuth: false },

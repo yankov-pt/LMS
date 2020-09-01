@@ -93,7 +93,7 @@ function EditBookItem() {
     const [language, setLanguage] = useState('')
     const [imgUpl, setImgUpl] = useState('')
     const [genre, setGenre] = useState([])
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState()
     const [description, setDescription] = useState('')
     const [bookedDates, setBookedDates] = useState([])
     const [copies, setCopies] = useState(1)
@@ -127,8 +127,30 @@ function EditBookItem() {
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates, location) => {
         e.preventDefault();
+        console.log(image)
+        if (image === null) {
+            firestore.collection("books").doc(currentBookId).set({
+                ...itemBook,
+                title,
+                author,
+                description,
+                language,
+                genre,
+                copies,
+                bookedDates,
+                location,
+                cover: '',
 
-        if (image?.name?.length > 0) {
+
+            }).then(r => {
+                toast.success(`Успешно променихте ${title}!`)
+
+            })
+                .catch(err => {
+                    toast.error(`Грешка!`)
+
+                })
+        } else if (image?.name?.length > 0) {
             console.log(image)
             const uploadTask = storage.ref(`images/${image.name}`).put(image);
             var cover = ''
@@ -187,7 +209,7 @@ function EditBookItem() {
                 copies,
                 bookedDates,
                 location,
-                cover: '',
+                // cover: '',
 
 
             }).then(r => {
@@ -261,7 +283,7 @@ function EditBookItem() {
                                 }
 
                                 <Button onClick={(e) => HandleUpload(e)} variant="outlined" color="primary">Промени корица</Button>
-                                <Button onClick={(e) => setImage('')} variant="outlined" color="primary">Премахни корица</Button>
+                                <Button onClick={(e) => {setImage(""); setImgUpl(null)}} variant="outlined" color="primary">Премахни корица</Button>
                                 <input id="image-file" type="file" onChange={HandlePrev} className={classes.uploadField} />
                             </Grid>
                             <Grid item xs={9}>

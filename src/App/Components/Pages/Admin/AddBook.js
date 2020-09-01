@@ -176,6 +176,7 @@ function BooksBase() {
                         title: item[0],
                         author: item[1],
                         description: '',
+                        cover: "",
                         language: languages1,
                         genre: genres1,
                         copies: item[4],
@@ -276,7 +277,9 @@ function BooksBase() {
                 genre,
                 copies,
                 bookedDates,
-                location
+                location,
+                cover: "",
+
             }).then(res => {
                 console.log(res.id)
                 toast.success(() => (

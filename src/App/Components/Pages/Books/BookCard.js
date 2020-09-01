@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function BookCard({ book }) {
     const classes = useStyles();
-
+    console.log(book)
 
     return (
 

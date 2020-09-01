@@ -9,15 +9,15 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Chip from '@material-ui/core/Chip';
 
-// import algoliasearch from 'algoliasearch/lite';
+import algoliasearch from 'algoliasearch/lite';
 import React, { Component } from 'react';
-// import {
-//     InstantSearch,
-//     connectSearchBox,
-//     connectInfiniteHits,
-//     Highlight, connectRefinementList,
+import {
+    InstantSearch,
+    connectSearchBox,
+    connectInfiniteHits,
+    Highlight, connectRefinementList,
 
-// } from 'react-instantsearch-dom';
+} from 'react-instantsearch-dom';
 
 const useStyles = makeStyles((theme) => ({
     cards: {
@@ -156,100 +156,100 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-// const searchClient = algoliasearch(
-//     'ORGLS5Z64Q',
-//     '5f264f95b844e4b70591918e1e347d79'
-// );
+const searchClient = algoliasearch(
+    'ORGLS5Z64Q',
+    '5f264f95b844e4b70591918e1e347d79'
+);
 function Books(searchWord) {
     const classes = useStyles();
     var searchString = ''
-    // if (searchWord.location.searchWord?.length > 0) {
-    //     searchString = searchWord.location.searchWord
-    // }
-    // const InfiniteHits = ({
-    //     hits,
-    //     hasMore,
-    //     refineNext,
-    // }) => (
-    //         <div>
+    if (searchWord.location.searchWord?.length > 0) {
+        searchString = searchWord.location.searchWord
+    }
+    const InfiniteHits = ({
+        hits,
+        hasMore,
+        refineNext,
+    }) => (
+            <div>
 
-    //             <Grid
-    //                 container
-    //                 direction="row"
-    //                 justify="center"
-    //                 spacing={5}
-    //                 className={classes.cards}
-    //             >
-    //                 {hits.map(hit => (
-    //                     <Grid key={hit.id} item xs={12} sm={4} md={3}>
-    //                         <BookCard book={hit} />
-    //                     </Grid>
-    //                 ))}
-    //             </Grid>
-    //             <button disabled={!hasMore} onClick={refineNext}>
-    //                 Покажи още
-    //       </button>
-    //         </div>
-    //     );
-    // const SearchBox = ({ currentRefinement, isSearchStalled, refine }) => (
-    //     <form noValidate action="" role="search">
-    //         <TextField
-    //             type="search"
-    //             className={classes.searchBar}
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    spacing={5}
+                    className={classes.cards}
+                >
+                    {hits.map(hit => (
+                        <Grid key={hit.id} item xs={12} sm={4} md={3}>
+                            <BookCard book={hit} />
+                        </Grid>
+                    ))}
+                </Grid>
+                <button disabled={!hasMore} onClick={refineNext}>
+                    Покажи още
+          </button>
+            </div>
+        );
+    const SearchBox = ({ currentRefinement, isSearchStalled, refine }) => (
+        <form noValidate action="" role="search">
+            <TextField
+                type="search"
+                className={classes.searchBar}
 
-    //             value={currentRefinement}
-    //             onChange={event => refine(event.currentTarget.value)}
-    //         />
-    //     </form>
-    // );
-    // const RefinementList = ({
-    //     items,
-    //     isFromSearch,
-    //     refine,
-    //     createURL,
-    // }) => (
-    //         <Grid item xs={4}>
-    //             Език
-    //             <Grid container direction='row' spacing={1}>
+                value={currentRefinement}
+                onChange={event => refine(event.currentTarget.value)}
+            />
+        </form>
+    );
+    const RefinementList = ({
+        items,
+        isFromSearch,
+        refine,
+        createURL,
+    }) => (
+            <Grid item xs={4}>
+                Език
+                <Grid container direction='row' spacing={1}>
 
-    //                 {items.map(item => (
-    //                     <Grid item>
-    //                         <Chip
-    //                             href={createURL(item.value)}
-    //                             label={item.label}
-    //                             clickable
-    //                             color={item.isRefined ? "primary" : "gray"}
-    //                             onClick={event => {
-    //                                 event.preventDefault();
-    //                                 refine(item.value);
-    //                             }}
-    //                         />
-    //                     </Grid>
+                    {items.map(item => (
+                        <Grid item>
+                            <Chip
+                                href={createURL(item.value)}
+                                label={item.label}
+                                clickable
+                                color={item.isRefined ? "primary" : "gray"}
+                                onClick={event => {
+                                    event.preventDefault();
+                                    refine(item.value);
+                                }}
+                            />
+                        </Grid>
 
 
-    //                 ))}
-    //             </Grid>
-    //         </Grid>
-    //     );
+                    ))}
+                </Grid>
+            </Grid>
+        );
 
-    // const CustomRefinementList = connectRefinementList(RefinementList);
-    // const CustomSearchBox = connectSearchBox(SearchBox);
+    const CustomRefinementList = connectRefinementList(RefinementList);
+    const CustomSearchBox = connectSearchBox(SearchBox);
 
-    // const CustomInfiniteHits = connectInfiniteHits(InfiniteHits);
+    const CustomInfiniteHits = connectInfiniteHits(InfiniteHits);
     return (
         <Container component="main" >
             <div className="ais-InstantSearch" style={{ marginBottom: '100px' }}>
                 <Typography variant="h6" noWrap>
                     Всички книги
                     </Typography>
-                {/* <InstantSearch indexName="books" searchClient={searchClient}>
+                <InstantSearch indexName="books" searchClient={searchClient}>
 
                     <CustomSearchBox />
                     <CustomRefinementList attribute="language" />
                     <CustomInfiniteHits />
 
 
-                </InstantSearch> */}
+                </InstantSearch>
             </div>
         </Container>
     )

@@ -78,13 +78,13 @@ const useStyles = makeStyles((theme) => ({
 function BookCard({ book }) {
     const classes = useStyles();
 
-
+    console.log(book)
     return (
 
 
         <Paper elevation={3} className={classes.card}>
             <Link style={{ textDecoration: 'none' }} to={{
-                pathname: `/books/${book.id}`
+                pathname: book.id !== undefined ? `/books/${book.id}` : `/books/${book.objectID}`
             }}>
 
                 {book.cover?.length > 0 ?
@@ -105,7 +105,7 @@ function BookCard({ book }) {
                     )}
                 </div>
                 <Link style={{ textDecoration: 'none' }} to={{
-                    pathname: `/books/${book.id}`,
+                    pathname: book.id !== undefined ? `/books/${book.id}` : `/books/${book.objectID}`,
                     state: { book: book }
                 }}>
                     <h3 className={classes.title}>{book.title}</h3>

@@ -20,6 +20,9 @@ const theme = createMuiTheme({
         },
         social: {
             main: "#1EA09F"
+        },
+        white: {
+            main: '#ffffff'
         }
     },
 

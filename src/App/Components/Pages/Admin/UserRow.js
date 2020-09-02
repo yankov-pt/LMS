@@ -20,7 +20,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles((theme) => ({
     paper: {
         height: '100%',
@@ -44,23 +45,24 @@ const useStyles = makeStyles((theme) => ({
 
 function UserRow({ row, setDetectChange }) {
     const [newRole, setNewRole] = useState(row.role)
-    const [localUser, setLocalUser]=useState(row)
+    const [localUser, setLocalUser] = useState(row)
 
-    
+
 
     const ChangeUser = (val) => {
-        console.log(val)
-        setLocalUser({...localUser, role: val})
+        setLocalUser({ ...localUser, role: val })
         setNewRole(val)
-        console.log('22', localUser)
-
     }
 
     const SaveUser = (user) => {
-        
+        firestore.collection('users').doc(user.id).set({ ...localUser }).then(
+            toast.success(() => (
+                <>Успешно променихте статуса на {user.username} на {localUser.role}!</>
+            ))
+        )
 
-        firestore.collection('users').doc(user.uid).set(localUser)
         setDetectChange(true)
+
     }
 
     return (
@@ -78,12 +80,12 @@ function UserRow({ row, setDetectChange }) {
                 <TableCell>{row.role}</TableCell>
                 <TableCell>
                     <select defaultValue={row.role} onChange={(e) => ChangeUser(e.target.value)}>
-                        <option  value="user">user</option>
-                        <option  value="admin">admin</option>
+                        <option value="user">user</option>
+                        <option value="admin">admin</option>
                         <option value="blocked">blocked</option>
                     </select>
-                    {row.role !== newRole ? <button  onClick={() => SaveUser(row)}>Промени</button> : <button disabled >Промени</button>}
-                    
+                    {row.role !== newRole ? <button onClick={() => SaveUser(row)}>Промени</button> : <button disabled >Промени</button>}
+
                 </TableCell>
             </TableRow>
         </>

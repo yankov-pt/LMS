@@ -76,13 +76,7 @@ const theme = createMuiTheme({
 });
 
 function App() {
-    setInterval(function () {
-        var d = new Date();
-        var n = d.toTimeString().split(' ');
-        if (n[0] === '00:00:00') {
-            console.log("It's a new day")
-        }
-    }, 1000);
+    
 
     return (
         <ThemeProvider theme={theme}>

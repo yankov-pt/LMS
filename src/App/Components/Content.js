@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         flexGrow: 1,
-        padding: "24px 0 ",
+        padding: "24px 0 100px",
         position: "relative",
         minHeight: '100vh',
         transition: theme.transitions.create('margin', {
@@ -111,7 +111,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'block',
         color: 'white',
         padding: ' 10px 15px',
-        width: '100%'
+        width: '100%',
+        textAlign: 'center'
     }
 }));
 
@@ -238,7 +239,7 @@ function Content() {
                     </Switch>
                 </Suspense>
                 <footer className={classes.footer}>
-                    Design and development by Darina Yordanova
+                    Design and Development by Darina Yordanova
                 </footer>
             </main>
 

@@ -29,7 +29,7 @@ const withAuthorization = condition => Component => {
       <UserContext.Consumer>
         {authUser =>
           authUser[0] ?
-            condition(authUser[0]) ? <Component /> : console.log('!!!!!tuk1 => ', authUser[0].role !== "banned")
+            condition(authUser[0]) ? <Component /> : null
 
 
             : null

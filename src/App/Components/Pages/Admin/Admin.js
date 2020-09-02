@@ -21,6 +21,8 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles((theme) => ({
   paper: {
     height: '100%',
@@ -83,16 +85,13 @@ function Admin() {
       .filter(element =>
         Date.parse(element.endDate.toDate().toDateString()) < Date.parse(today.toDateString())
       );
-    books.map(element =>
-      console.log(Date.parse(element.endDate.toDate().toDateString()))
-    )
+    
     setBooksToBeTaken(filteredArray)
     setBooksToBeReturned(filteredArray1)
     setЕxpired(filteredArray3)
   }, [books])
 
   useEffect(() => {
-    console.log('books to be taken', booksToBeTaken)
   }, [booksToBeTaken])
 
   useEffect(() => {
@@ -147,38 +146,44 @@ function Admin() {
 
   const ChangeStatusToTaken = async (operation) => {
     const data = await firestore.collection('users').doc(operation.user.uid).get()
-    console.log(data.data())
     var removedItem = data.data().futureBooks.filter(el => el.operationId === operation.id)
     var newFuture = data.data().futureBooks.filter(el => el.operationId !== operation.id)
     var newCurrent = data.data().booksCurrentlyInUser
     newCurrent.push(removedItem[0])
-    console.log('removedItem', removedItem)
-    console.log(newFuture)
-    console.log(newCurrent)
+    
     firestore.collection('users').doc(operation.user.uid).set({ ...data.data(), futureBooks: newFuture, booksCurrentlyInUser: newCurrent })
     firestore.collection('operations').doc(operation.id).set({ ...operation, status: 'inUser' }).then(fetchData())
-    fetchData();
+    fetchData().then(toast.success(() => (
+    <>Успешно променихте статуса на { operation.book.title} на ВЗЕТА!</>
+    )));
   }
-  useEffect(() => {
-    // console.log(localUser)
-  }, [localUser])
+  
 
   const ChangeStatusToReturned = async (operation) => {
     const data = await firestore.collection('users').doc(operation.user.uid).get()
-    console.log(data.data())
     var removedItem = data.data().booksCurrentlyInUser.filter(el => el.operationId === operation.id)
     var newCurrent = data.data().booksCurrentlyInUser.filter(el => el.operationId !== operation.id)
     var newReturned = data.data().returnedBooks
     newReturned.push(removedItem[0])
-    console.log('removedItem', removedItem)
-    console.log(newCurrent)
-    console.log(newReturned)
+    toast.success(() => (
+    <>Успешно променихте статуса на { operation.book.title} на ВЪРНАТА!</>
+  ))
     firestore.collection('users').doc(operation.user.uid).set({ ...data.data(), booksCurrentlyInUser: newCurrent, returnedBooks: newReturned })
     firestore.collection('operations').doc(operation.id).set({ ...operation, status: 'returned' }).then(fetchData())
     fetchData();
   }
   return (
     <Container component="main" >
+      <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover />
       <CssBaseline />
       <div >
         <Grid container spacing={2} >

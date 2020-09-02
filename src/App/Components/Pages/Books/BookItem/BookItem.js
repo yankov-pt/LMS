@@ -6,6 +6,7 @@ import { firestore } from '../../../Firebase/firebase'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import { UserContext } from "../../../../Context/userContext";
 import { add, addDays } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
@@ -34,8 +35,43 @@ const useStyles = makeStyles((theme) => ({
             margin: '0 auto'
         }
     },
+    clendarDisable: {
+        width: '100%',
+        pointerEvents: 'none',
+        filter: 'blur(2px)',
+        "& .rdrDefinedRangesWrapper": {
+            display: 'none'
+        },
+        '& .rdrCalendarWrapper': {
+            margin: '0 auto'
+        },
+    },
+    clendarText: {
+        fontSize: '22px',
+        position: 'absolute',
+        transform: 'translate(-50%, -50%)',
+        top: '59%',
+        fontWeight: '700',
+        color: 'white',
+        left: '50%',
+        padding: '10px',
+        backgroundColor: '#225164b5',
+        width: '66%'
+    },
+
+    language: {
+        position: 'absolute',
+        bottom: '0px',
+        left: '10px',
+        backgroundColor: '#FFF34E',
+        borderRadius: '10px 10px 0px 0px',
+        padding: '5px 5px 2px',
+        margin: '0',
+        fontWeight: 'bold'
+    },
     cover: {
-        width: '100%'
+        width: '100%',
+        display: 'block',
     },
     clendarBox: {
         textAlign: 'center'
@@ -96,6 +132,7 @@ function BookItem() {
 
     useEffect(() => {
         setLocalState(itemBook)
+
         var resArray = new Array();
         var finalArray = new Array();
 
@@ -182,10 +219,8 @@ function BookItem() {
             start = addDays(start, 1);
             resArray.push(start);
         }
-        console.log(resArray.length)
 
         if (resArray.length <= 30 && myDates[0].startDate !== null && myDates[0].endDate !== null) {
-            console.log('1111111111111111111111111')
 
             var futureReading = localUser.futureBooks
             firestore.collection("operations").add({
@@ -197,7 +232,6 @@ function BookItem() {
                 status: 'toBeTaken' //toBeTaken || inUser || returned
             }).then(
                 (res) => {
-                    console.log(res.id)
                     var newDate = {
                         startDate: myDates[0].startDate,
                         endDate: myDates[0].endDate,
@@ -270,21 +304,25 @@ function BookItem() {
             <Grid container spacing={3}>
                 <Grid item lg={8} md={6} xs={12} >
                     <Grid container spacing={3}>
-                        <Grid item md={4} xs={12}>
-                            {itemBook?.cover?.length > 0 ?
-                                <img src={itemBook?.cover} alt={itemBook?.title} className={classes.cover} />
-                                : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=31d32428-3e76-4226-ba13-78e294a86f0e" alt={itemBook.title} className={classes.cover} />
+                        <Grid item md={4} xs={12} >
+                            <div style={{
+                                marginBottom: '10px', position: 'relative', maxWidth: '234px',
+                                margin: '10px auto', boxShadow: '0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12)'
+                            }}>
+                                {itemBook?.cover?.length > 0 ?
+                                    <img src={itemBook?.cover} alt={itemBook?.title} className={classes.cover} />
+                                    : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=31d32428-3e76-4226-ba13-78e294a86f0e" alt={itemBook.title} className={classes.cover} />
 
-                            }
-
+                                }
+                                <p className={classes.language}>{itemBook?.language}</p>
+                            </div>
+                            {itemBook?.genre?.map((item) => <Chip style={{ maxWidth: '100%', margin: '5px 0' }} label={`#${item}`} component="a" href="#chip" clickable />)}
 
                         </Grid>
                         <Grid item md={8} xs={12}>
                             <Typography variant="h5" component="h5">{itemBook?.title}</Typography>
                             <h2>{itemBook?.author}</h2>
-                            <p>{itemBook?.description}</p>
-                            <h2>{itemBook?.genre}</h2>
-                            <h2>{itemBook?.language}</h2>
+                            {itemBook?.description?.split(/\n/).map((par) => <p>{par}</p>)}
                         </Grid>
                     </Grid>
                 </Grid>
@@ -299,7 +337,27 @@ function BookItem() {
 
                         : null}
                     {!user ?
-                        <p>Register to book a book</p>
+                        <div style={{ position: 'relative' }}>
+                            <DateRangePicker
+                                locale={bg}
+
+                                onChange={item => setMyDates([item.selection])}
+                                showSelectionPreview={true}
+                                moveRangeOnFirstSelection={false}
+                                ranges={myDates}
+                                direction="horizontal"
+                                staticRanges={[]}
+                                inputRanges={[]}
+                                disabledDates={reservedDates}
+                                startDatePlaceholder={'От'}
+                                endDatePlaceholder={'До'}
+                                minDate={new Date()}
+                                className={classes.clendarDisable}
+                                rangeColors={['rgb(34,81,100)']}
+                            />
+                            <Typography variant='h3' className={classes.clendarText} > Регистрирай се, за да запазиш книга</Typography>
+                        </div>
+
                         :
                         <div className={classes.clendarBox}>
 

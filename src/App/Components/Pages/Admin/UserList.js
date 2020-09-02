@@ -21,7 +21,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import UserRow from './UserRow'
-
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -60,7 +62,7 @@ function UserList() {
         fetchData();
     }, []);
     useEffect(() => {
-       setFUsers(users)
+        setFUsers(users)
     }, [users]);
     useEffect(() => {
         if (detectChange) {
@@ -75,17 +77,25 @@ function UserList() {
             setFUsers(users)
         }
         else {
-            filteredArray.map(item => console.log(item))
             setFUsers(users.filter(user =>
-                user?.uid?.includes(searchUser) 
-                || user?.email?.toLowerCase().includes(searchUser.toLowerCase()) 
-                || user?.username?.toLowerCase().includes(searchUser.toLowerCase()) 
+                user?.uid?.includes(searchUser)
+                || user?.email?.toLowerCase().includes(searchUser.toLowerCase())
+                || user?.username?.toLowerCase().includes(searchUser.toLowerCase())
                 || user?.role?.toLowerCase().includes(searchUser.toLowerCase())))
         }
     }, [searchUser])
     return (
         <Container component="main">
-
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover />
             <CssBaseline />
             <Grid container spacing={2} >
                 <Grid item xs={12}>
@@ -118,7 +128,7 @@ function UserList() {
                                             <UserRow row={row} setDetectChange={setDetectChange} key={row.id} />
                                         ))
 
-                                        : null
+                                        : <CircularProgress style={{ position: 'absolute', left: '50%' }} />
                                     }
                                 </TableBody>
                             </Table>

@@ -45,7 +45,6 @@ function UserItem(book) {
     const [futureBooks, setFutureBooks] = useState([])
     const [pastBooks, setPastBooks] = useState([])
 
-
     const GetUserById = (uid) => {
         firestore.collection('users').doc(uid).get().then((docRef) => { setUser(docRef.data()) })
             .catch((error) => { })
@@ -57,15 +56,15 @@ function UserItem(book) {
         var n = str.lastIndexOf('/');
         var res = str.substring(n + 1)
         GetUserById(res)
-
     }, [])
-
+   
     useEffect(() => {
-        console.log(user)
         var newArr = []
+        // setCurrentBooks([])
+        // setFutureBooks([])
+        // setPastBooks([])
         if (user.booksCurrentlyInUser) {
             user.booksCurrentlyInUser.map(el => {
-                console.log(el)
                 firestore.collection('books').doc(el.book).get().then(data => {
                     var newelem = {
                         bookID: el.book,
@@ -124,8 +123,6 @@ function UserItem(book) {
         }
     }
     const ChangeStatusToReturned = async (row) => {
-        console.log(user)
-        console.log(row.operationId)
         const data = await firestore.collection('users').doc(user.uid).get()
 
         const book = await firestore.collection('books').doc(row.bookID).get()
@@ -139,13 +136,10 @@ function UserItem(book) {
 
         var resultObject = search(row.operationId, bookdates.data().bookedDates);
         firestore.collection('users').doc(user.uid).set({ ...data.data(), booksCurrentlyInUser: newCurrent, returnedBooks: newReturned })
-        firestore.collection('operations').doc(row.operationId).set({ ...operation.data(), status: 'returned' }).then(fetchData())
-        firestore.collection('books').doc(row.bookID).set({ ...bookdates.data(), bookedDates: resultObject }).then(fetchData())
-        fetchData();
+        firestore.collection('operations').doc(row.operationId).set({ ...operation.data(), status: 'returned' })
+        firestore.collection('books').doc(row.bookID).set({ ...bookdates.data(), bookedDates: resultObject })
     }
-    useEffect(() => {
-        console.log(currentBooks)
-    }, [currentBooks])
+    
 
     return (
         <Container component="main" >

@@ -142,9 +142,7 @@ function BooksBase() {
     const [data, setData] = useState([])
     const [uploadErrors, setUploadErrors] = useState([])
     const batch = firestore.batch()
-    useEffect(() => {
-        console.log(data)
-    }, [data])
+    
 
     const getXlsxDocument = evt => {
         var files = evt.target.files; // FileList object
@@ -167,7 +165,6 @@ function BooksBase() {
             /* Update state */
             var newArr = []
             booksData.map(item => {
-                console.log(item)
                 const genres1 = item[2].split(', ');
                 const languages1 = item[5].split(', ');
                 newArr.push(
@@ -197,16 +194,17 @@ function BooksBase() {
             batch.set(firestore.collection('books').doc(), doc)
         })
         batch.commit().then(function () {
-            console.log('done?')
+            setData([])
+            toast.success(() => (
+                <>Успешно импортирахте книгите!</>
+            ))
         })
     }
 
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates) => {
         e.preventDefault();
-        console.log(image.name)
         if (image.name !== undefined) {
-            console.log('1')
 
             const uploadTask = storage.ref(`images/${image.name}`).put(image);
             var cover = ''
@@ -217,7 +215,6 @@ function BooksBase() {
 
                 },
                 error => {
-                    console.log(error);
                 },
                 () => {
                     storage
@@ -225,7 +222,6 @@ function BooksBase() {
                         .child(image.name)
                         .getDownloadURL()
                         .then(url => {
-                            console.log(url)
                             cover = url
                         })
                         .then(res => {
@@ -267,7 +263,6 @@ function BooksBase() {
             )
         }
         else {
-            console.log('2')
             firestore.collection("books").add({
                 title,
                 author,
@@ -280,7 +275,6 @@ function BooksBase() {
                 cover: "",
 
             }).then(res => {
-                console.log(res.id)
                 toast.success(() => (
                     <>Успешно създадохте <Link className={classes.whiteLink} to={`/books/${res.id}`}>{title}</Link>!</>
                 ))
@@ -322,10 +316,8 @@ function BooksBase() {
 
 
         setImage(evt.target.files[0])
-        console.log(evt.target.files[0].type)
         if (evt.target.files[0].type === "image/jpeg" || evt.target.files[0].type === "image/png") {
             var image = document.createElement('img');
-            console.log(URL.createObjectURL(evt.target.files[0]))
 
             image.src = URL.createObjectURL(evt.target.files[0]);
             document.getElementById("preview").append(image);
@@ -515,6 +507,7 @@ function BooksBase() {
                         className="form-control"
                         id="file"
                         ref={inputFileRef}
+                        value={setData}
                         accept={SheetJSFT}
                         onChange={getXlsxDocument}
                     />

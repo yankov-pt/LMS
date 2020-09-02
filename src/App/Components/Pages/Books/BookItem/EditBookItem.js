@@ -127,9 +127,7 @@ function EditBookItem() {
 
     const HandleSubmit = (e, title, author, description, language, genre, image, bookedDates, location) => {
         e.preventDefault();
-
         if (image?.name?.length > 0) {
-            console.log(image)
             const uploadTask = storage.ref(`images/${image.name}`).put(image);
             var cover = ''
 
@@ -140,7 +138,6 @@ function EditBookItem() {
 
                 },
                 error => {
-                    console.log(error);
                 },
                 () => {
                     storage
@@ -148,7 +145,6 @@ function EditBookItem() {
                         .child(image.name)
                         .getDownloadURL()
                         .then(url => {
-                            console.log(url)
                             cover = url
                         })
                         .then(res => {

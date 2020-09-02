@@ -36,15 +36,42 @@
     width: 100%;
     position: relative;
     display: flex;
+    min-height: 250px;
+    @include for-size(phone-only) {
+        height: 30vh;
+    }
+    @include for-size(tablet-portrait-up) {
+        height: 30vh;
+    }
+    @include for-size(desktop-up) {
+        height: 60vh;
+    }
 }
 #head-section-image {
     width: 100%;
+    position: absolute;
+    bottom: -1px;
 }
 #head-section-content {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 120px;
+    @include for-size(phone-only) {
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 10px;
+    }
+    @include for-size(tablet-portrait-up) {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 120px;
+    }
+    @include for-size(desktop-up) {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 120px;
+    }
 }
 #blue-section {
     background-color: #193f4c;
@@ -53,167 +80,372 @@
 #get-book {
     padding: 40px 0 20px;
 }
-#carosell{
+.header {
     @include for-size(phone-only) {
-        display: none
+        font-size: 30px !important;
+        text-align: center;
     }
     @include for-size(tablet-portrait-up) {
-        display: none
+        font-size: 50px !important;
+        text-align: center;
     }
     @include for-size(desktop-up) {
-        display: block
+        font-size: 72px !important;
+        text-align: left;
     }
 }
-#stepper{
+#carosell {
     @include for-size(phone-only) {
-        display: none
+        display: none;
     }
     @include for-size(tablet-portrait-up) {
-        display: none
+        display: none;
     }
     @include for-size(desktop-up) {
-        display: flex
+        display: block;
     }
+}
+#booksMobile{
+    @include for-size(phone-only) {
+        display: flex;
+    }
+    @include for-size(tablet-portrait-up) {
+        display: flex;
+    }
+    @include for-size(desktop-up) {
+        display: none;
+    }
+}
+#stepper {
+    @include for-size(phone-only) {
+        display: none;
+    }
+    @include for-size(tablet-portrait-up) {
+        display: none;
+    }
+    @include for-size(desktop-up) {
+        display: flex;
+    }
+}
+.circle {
+    animation-direction: alternate-reverse;
+    transform-origin: center;
 }
 .infogr {
     display: grid;
     @include for-size(phone-only) {
         grid-template-columns: 100%;
-        grid-template-rows: 80px 80px 80px 80px 80px;
+        // grid-template-rows: 200px 200px 200px 20px 200px;
     }
     @include for-size(tablet-portrait-up) {
-        grid-template-columns: 33.333% 33.333% 33.333%;
-        grid-template-rows: 80px 80px 80px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        // grid-template-rows: 200px 200px 200px;
     }
     @include for-size(desktop-up) {
-        grid-template-columns: 20% 20% 20% 20% 20%;
-        grid-template-rows: 80px 80px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        // grid-template-rows: 250px 250px;
     }
     column-gap: 10px;
     row-gap: 15px;
-   
+    svg {
+        width: 100%;
+    }
+    p {
+        font-size: 18px;
+        text-align: center;
+        font-weight: 500;
+        span {
+            margin-right: 20px;
+            margin-left: -30px;
+            color: #193f4c;
+            display: inline-block;
+            position: relative;
+            font-weight: 700;
+            font-size: 22px;
+            &:before {
+                content: "";
+                width: 30px;
+                height: 30px;
+                background-color: #fff34e;
+                border-radius: 50%;
+                position: absolute;
+                transform: translate(-50%, -50%);
+                top: 45%;
+                z-index: -1;
+                left: 50%;
+            }
+        }
+    }
     .s1 {
         @include for-size(phone-only) {
             grid-column: 1;
             grid-row: 1;
+            margin-top: 50px;
+            padding: 0 40px;
+
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 1;
             grid-row: 1;
+            padding: 0 40px;
         }
         @include for-size(desktop-up) {
             grid-column: 1;
             grid-row: 1;
+            padding: 0 0px;
+        }
+        &:hover {
+            .circle {
+                animation: myCircle 2s infinite;
+            }
         }
     }
     .a1 {
         @include for-size(phone-only) {
-            display: none
+            display: none;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: none;
+            }
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 2;
             grid-row: 1;
+            align-self: center;
+
+            .lg {
+                display: none;
+            }
+            .md {
+                display: block;
+            }
         }
         @include for-size(desktop-up) {
             grid-column: 1;
             grid-row: 2;
+            .lg {
+                display: block;
+            }
+            .md {
+                display: none;
+            }
         }
     }
     .s2 {
         @include for-size(phone-only) {
             grid-column: 1;
             grid-row: 2;
+            margin-top: 50px;
+            padding: 0 40px;
+
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 3;
             grid-row: 1;
+            padding: 0 40px;
         }
         @include for-size(desktop-up) {
             grid-column: 2;
             grid-row: 2;
+            padding: 0 0px;
+        }
+        &:hover {
+            .circle {
+                animation: myCircle 3s infinite;
+            }
         }
     }
     .a2 {
         @include for-size(phone-only) {
-            display: none
+            display: none;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: none;
+            }
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 3;
             grid-row: 2;
+            align-self: center;
+            justify-self: start;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: block;
+            }
         }
         @include for-size(desktop-up) {
             grid-column: 2;
             grid-row: 1;
+            .lg {
+                display: block;
+            }
+            .md {
+                display: none;
+            }
         }
     }
     .s3 {
         @include for-size(phone-only) {
             grid-column: 1;
             grid-row: 3;
+            margin-top: 50px;
+            padding: 0 40px;
+
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 2;
             grid-row: 2;
+            padding: 0 40px;
         }
         @include for-size(desktop-up) {
             grid-column: 3;
             grid-row: 1;
+            padding: 0 0px;
+        }
+        &:hover {
+            .circle {
+                animation: myCircle 3s infinite;
+            }
         }
     }
     .a3 {
         @include for-size(phone-only) {
-            display: none
+            display: none;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: none;
+            }
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 1;
             grid-row: 2;
+            align-self: center;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: block;
+            }
         }
         @include for-size(desktop-up) {
             grid-column: 3;
             grid-row: 2;
+            .lg {
+                display: block;
+            }
+            .md {
+                display: none;
+            }
         }
     }
     .s4 {
         @include for-size(phone-only) {
             grid-column: 1;
             grid-row: 4;
+            margin-top: 50px;
+            padding: 0 40px;
+
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 1;
             grid-row: 3;
+            padding: 0 40px;
         }
         @include for-size(desktop-up) {
             grid-column: 4;
             grid-row: 2;
+            padding: 0 0px;
+        }
+        &:hover {
+            .circle {
+                animation: myCircle 3s infinite;
+            }
         }
     }
     .a4 {
         @include for-size(phone-only) {
-            display: none
+            display: none;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: none;
+            }
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 2;
             grid-row: 3;
+            align-self: end;
+            .lg {
+                display: none;
+            }
+            .md {
+                display: block;
+            }
         }
         @include for-size(desktop-up) {
             grid-column: 4;
             grid-row: 1;
+            align-self: center;
+            .lg {
+                display: block;
+            }
+            .md {
+                display: none;
+            }
         }
     }
     .s5 {
         @include for-size(phone-only) {
             grid-column: 1;
             grid-row: 5;
+            margin-top: 50px;
+            padding: 0 40px;
+
         }
         @include for-size(tablet-portrait-up) {
             grid-column: 3;
             grid-row: 3;
+            padding: 0 40px;
         }
         @include for-size(desktop-up) {
             grid-column: 5;
             grid-row: 1;
+            padding: 0 0px;
+        }
+        &:hover {
+            .circle {
+                animation: myCircle 3s infinite;
+            }
         }
     }
 }
-
+@keyframes myCircle {
+    0% {
+        -ms-transform: scale(1, 1); /* IE 9 */
+        transform: scale(1, 1);
+    }
+    50% {
+        -ms-transform: scale(0.6, 0.6); /* IE 9 */
+        transform: scale(0.6, 0.6);
+    }
+    100% {
+        -ms-transform: scale(1, 1); /* IE 9 */
+        transform: scale(1, 1);
+    }
+}
 ////////////////////////Calendar
+.ais-InfiniteHits-loadMore {
+    overflow-anchor: none;
+}
+// .makeStyles-contentShift-12 {
+//     margin-left: -240px !important;
+// }

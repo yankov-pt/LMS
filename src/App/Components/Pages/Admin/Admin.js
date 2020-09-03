@@ -23,6 +23,10 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
 const useStyles = makeStyles((theme) => ({
   paper: {
     height: '100%',
@@ -41,7 +45,25 @@ const useStyles = makeStyles((theme) => ({
   },
 
 }));
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 function Admin() {
   const classes = useStyles();
   const [books, setBooks] = useState([])
@@ -52,6 +74,7 @@ function Admin() {
   const [searchReturn, setSearchReturn] = useState('')
   const [searchЕxpired, setSearchЕxpired] = useState('')
   const [localUser, setLocalUser] = useState({})
+  const [value, setValue] = React.useState(0);
 
   const fetchData = async () => {
     const data = await firestore.collection("operations").get();
@@ -85,7 +108,7 @@ function Admin() {
       .filter(element =>
         Date.parse(element.endDate.toDate().toDateString()) < Date.parse(today.toDateString())
       );
-    
+
     setBooksToBeTaken(filteredArray)
     setBooksToBeReturned(filteredArray1)
     setЕxpired(filteredArray3)
@@ -150,14 +173,14 @@ function Admin() {
     var newFuture = data.data().futureBooks.filter(el => el.operationId !== operation.id)
     var newCurrent = data.data().booksCurrentlyInUser
     newCurrent.push(removedItem[0])
-    
+
     firestore.collection('users').doc(operation.user.uid).set({ ...data.data(), futureBooks: newFuture, booksCurrentlyInUser: newCurrent })
     firestore.collection('operations').doc(operation.id).set({ ...operation, status: 'inUser' }).then(fetchData())
     fetchData().then(toast.success(() => (
-    <>Успешно променихте статуса на { operation.book.title} на ВЗЕТА!</>
+      <>Успешно променихте статуса на { operation.book.title} на ВЗЕТА!</>
     )));
   }
-  
+
 
   const ChangeStatusToReturned = async (operation) => {
     const data = await firestore.collection('users').doc(operation.user.uid).get()
@@ -166,24 +189,28 @@ function Admin() {
     var newReturned = data.data().returnedBooks
     newReturned.push(removedItem[0])
     toast.success(() => (
-    <>Успешно променихте статуса на { operation.book.title} на ВЪРНАТА!</>
-  ))
+      <>Успешно променихте статуса на { operation.book.title} на ВЪРНАТА!</>
+    ))
     firestore.collection('users').doc(operation.user.uid).set({ ...data.data(), booksCurrentlyInUser: newCurrent, returnedBooks: newReturned })
     firestore.collection('operations').doc(operation.id).set({ ...operation, status: 'returned' }).then(fetchData())
     fetchData();
   }
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <Container component="main" >
       <ToastContainer
-                position="top-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover />
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover />
       <CssBaseline />
       <div >
         <Grid container spacing={2} >
@@ -236,203 +263,223 @@ function Admin() {
             </Link>
           </Grid>
           <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <Grid container spacing={2} >
-                <Grid item xs={6}>
-                  <Typography variant="h4" component="div">
-                    За взимане
+
+            <AppBar position="static">
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="simple tabs example"
+                centered
+              >
+                <Tab label="За взимане" />
+                <Tab label="За връщане" />
+                <Tab label="Просрочени" />
+              </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+              <Paper className={classes.paper}>
+                <Grid container spacing={2} >
+                  <Grid item xs={6}>
+                    <Typography variant="h4" component="div">
+                      За взимане
                   </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      className={classes.searchBar}
+                      id="standard-search"
+                      label="Книга / Потребител"
+                      fullWidth
+                      value={searchTake}
+                      type="search"
+                      onChange={(e) => setSearchTake(e.target.value)} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    className={classes.searchBar}
-                    id="standard-search"
-                    label="Книга / Потребител"
-                    fullWidth
-                    value={searchTake}
-                    type="search"
-                    onChange={(e) => setSearchTake(e.target.value)} />
-                </Grid>
-              </Grid>
-              <TableContainer >
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Book</TableCell>
-                      <TableCell>Location</TableCell>
-                      <TableCell>User</TableCell>
-                      <TableCell>From Date</TableCell>
-                      <TableCell>To date</TableCell>
-                      <TableCell>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {booksToBeTaken.length ?
-                      booksToBeTaken.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell component="th" scope="row">
-                            <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
-                              {row.book.title}
-                            </Link>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.book.location}
-                          </TableCell>
-                          <TableCell>
-                            <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
-                              {row.user.username}
-                            </Link>
-                          </TableCell>
-                          <TableCell>
-                            {row.startDate.toDate().toDateString()}
-                          </TableCell>
-                          <TableCell>
-                            {row.endDate.toDate().toDateString()}
-                          </TableCell>
-                          <TableCell>
-                            <Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToTaken(row)} >Взета</Button>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                      : null
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Grid container spacing={2} >
-                <Grid item xs={6}>
-                  <Typography variant="h4" component="div">
-                    За връщане
+                <TableContainer >
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Book</TableCell>
+                        <TableCell>Location</TableCell>
+                        <TableCell>User</TableCell>
+                        <TableCell>From Date</TableCell>
+                        <TableCell>To date</TableCell>
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {booksToBeTaken.length ?
+                        booksToBeTaken.map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell component="th" scope="row">
+                              <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
+                                {row.book.title}
+                              </Link>
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.book.location}
+                            </TableCell>
+                            <TableCell>
+                              <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
+                                {row.user.username}
+                              </Link>
+                            </TableCell>
+                            <TableCell>
+                              {row.startDate.toDate().toDateString()}
+                            </TableCell>
+                            <TableCell>
+                              {row.endDate.toDate().toDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToTaken(row)} >Взета</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                        : null
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <Paper className={classes.paper}>
+                <Grid container spacing={2} >
+                  <Grid item xs={6}>
+                    <Typography variant="h4" component="div">
+                      За връщане
                   </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      className={classes.searchBar}
+                      id="standard-search"
+                      label="Книга / Потребител"
+                      fullWidth
+                      value={searchReturn}
+                      type="search"
+                      onChange={(e) => setSearchReturn(e.target.value)} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    className={classes.searchBar}
-                    id="standard-search"
-                    label="Книга / Потребител"
-                    fullWidth
-                    value={searchReturn}
-                    type="search"
-                    onChange={(e) => setSearchReturn(e.target.value)} />
-                </Grid>
-              </Grid>
-              <TableContainer >
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Book</TableCell>
-                      <TableCell>Location</TableCell>
+                <TableContainer >
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Book</TableCell>
+                        <TableCell>Location</TableCell>
 
-                      <TableCell>User</TableCell>
-                      <TableCell>From Date</TableCell>
-                      <TableCell>To date</TableCell>
-                      <TableCell>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {booksToBeReturned.length ?
-                      booksToBeReturned.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell component="th" scope="row">
-                            <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
-                              {row.book.title}
-                            </Link>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.book.location}
-                          </TableCell>
-                          <TableCell>
-                            <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
-                              {row.user.username}
-                            </Link>
-                          </TableCell>
-                          <TableCell>
-                            {row.startDate.toDate().toDateString()}
-                          </TableCell>
-                          <TableCell>
-                            {row.endDate.toDate().toDateString()}
-                          </TableCell>
-                          <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
+                        <TableCell>User</TableCell>
+                        <TableCell>From Date</TableCell>
+                        <TableCell>To date</TableCell>
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {booksToBeReturned.length ?
+                        booksToBeReturned.map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell component="th" scope="row">
+                              <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
+                                {row.book.title}
+                              </Link>
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.book.location}
+                            </TableCell>
+                            <TableCell>
+                              <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
+                                {row.user.username}
+                              </Link>
+                            </TableCell>
+                            <TableCell>
+                              {row.startDate.toDate().toDateString()}
+                            </TableCell>
+                            <TableCell>
+                              {row.endDate.toDate().toDateString()}
+                            </TableCell>
+                            <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
 
-                        </TableRow>
-                      ))
-                      : null
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Grid container spacing={2} >
-                <Grid item xs={12}>
-                  <Typography variant="h4" component="div">
-                    Просрочени
+                          </TableRow>
+                        ))
+                        : null
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <Paper className={classes.paper}>
+                <Grid container spacing={2} >
+                  <Grid item xs={6}>
+                    <Typography variant="h4" component="div">
+                      Просрочени
                   </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      className={classes.searchBar}
+                      id="standard-search"
+                      label="Книга / Потребител"
+                      fullWidth
+                      value={searchЕxpired}
+                      type="search"
+                      onChange={(e) => setSearchЕxpired(e.target.value)} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    className={classes.searchBar}
-                    id="standard-search"
-                    label="Книга / Потребител"
-                    fullWidth
-                    value={searchЕxpired}
-                    type="search"
-                    onChange={(e) => setSearchЕxpired(e.target.value)} />
-                </Grid>
-              </Grid>
-              <TableContainer >
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Book</TableCell>
-                      <TableCell>Location</TableCell>
+                <TableContainer >
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Book</TableCell>
+                        <TableCell>Location</TableCell>
 
-                      <TableCell>User</TableCell>
-                      <TableCell>From Date</TableCell>
-                      <TableCell>To date</TableCell>
-                      <TableCell>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {еxpired.length ?
-                      еxpired.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell component="th" scope="row">
-                            <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
-                              {row.book.title}
-                            </Link>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {row.book.location}
-                          </TableCell>
-                          <TableCell>
-                            <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
-                              {row.user.username}
-                            </Link>
-                          </TableCell>
-                          <TableCell>
-                            {row.startDate.toDate().toDateString()}
-                          </TableCell>
-                          <TableCell>
-                            {row.endDate.toDate().toDateString()}
-                          </TableCell>
-                          <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
+                        <TableCell>User</TableCell>
+                        <TableCell>From Date</TableCell>
+                        <TableCell>To date</TableCell>
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {еxpired.length ?
+                        еxpired.map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell component="th" scope="row">
+                              <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookId}` }}>
+                                {row.book.title}
+                              </Link>
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.book.location}
+                            </TableCell>
+                            <TableCell>
+                              <Link style={{ textDecoration: 'none' }} to={{ pathname: `/users/${row.user.uid}` }}>
+                                {row.user.username}
+                              </Link>
+                            </TableCell>
+                            <TableCell>
+                              {row.startDate.toDate().toDateString()}
+                            </TableCell>
+                            <TableCell>
+                              {row.endDate.toDate().toDateString()}
+                            </TableCell>
+                            <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
 
-                        </TableRow>
-                      ))
-                      : null
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
+                          </TableRow>
+                        ))
+                        : null
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </TabPanel>
+
+
+
           </Grid>
+
+
         </Grid>
       </div>
     </Container>

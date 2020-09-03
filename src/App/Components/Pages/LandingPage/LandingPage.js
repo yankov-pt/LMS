@@ -16,6 +16,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import GoogleMapReact from 'google-map-react';
 const AutoPlaySwipeableViews = SwipeableViews;
 const useStyles = makeStyles((theme) => ({
     cards: {
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
     }
 }));
-
+const AnyReactComponent = ({ text }) => <img src='/hub-logo.png'/>;
 function LandingPage() {
     const [searchWord, setSearchWord] = useState('')
     const [searchNow, setSearchNow] = useState(false)
@@ -601,10 +602,20 @@ function LandingPage() {
                                     +359 884 901 121</p>
                         </Grid>
                         <Grid item lg={6} md={6} sm={12} xs={12} >
-                                <p>
-                                   
-                                    studyhub.bulgaria@gmail.com</p>
-                                <p>+359 884 901 121</p>
+                            <div style={{ height: '300px', width: '100%' }}>
+                                <GoogleMapReact
+                                bootstrapURLKeys={{ key: 'AIzaSyChRnCkVLvvNrExIhYpPavcZtTVgVrb3iI' }}
+                                defaultCenter={{lat: 42.656371,
+                                    lng: 23.345478}}
+                                defaultZoom={16}
+                                >
+                                <AnyReactComponent
+                                    lat={42.656371}
+                                    lng={23.345478}
+                                    text="My Marker"
+                                />
+                                </GoogleMapReact>
+                            </div>
                         </Grid>
                     </Grid>
                 

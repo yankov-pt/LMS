@@ -16,7 +16,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) => ({
     cards: {
@@ -37,6 +40,25 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box p={3}>
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
 
 function UserItem(book) {
     const classes = useStyles();
@@ -44,6 +66,7 @@ function UserItem(book) {
     const [currentBooks, setCurrentBooks] = useState([])
     const [futureBooks, setFutureBooks] = useState([])
     const [pastBooks, setPastBooks] = useState([])
+    const [value, setValue] = React.useState(0);
 
     const GetUserById = (uid) => {
         firestore.collection('users').doc(uid).get().then((docRef) => { setUser(docRef.data()) })
@@ -57,7 +80,10 @@ function UserItem(book) {
         var res = str.substring(n + 1)
         GetUserById(res)
     }, [])
-   
+    useEffect(() => {
+        console.log(user)
+    }, [user])
+
     useEffect(() => {
         var newArr = []
         // setCurrentBooks([])
@@ -139,135 +165,159 @@ function UserItem(book) {
         firestore.collection('operations').doc(row.operationId).set({ ...operation.data(), status: 'returned' })
         firestore.collection('books').doc(row.bookID).set({ ...bookdates.data(), bookedDates: resultObject })
     }
-    
 
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     return (
         <Container component="main" >
-
-            <Typography variant="h1" component="h1">{user.username}</Typography>
-            <Typography variant="h1" component="h1">{user.role}</Typography>
-            <Grid container spacing={2} >
-                <Grid item xs={6}>
-                    <Paper className={classes.paper}>
-                        <Typography variant="h4" component="div">
-                            Книги в потребителя
-                        </Typography>
-                        <TableContainer >
-                            <Table className={classes.table} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Книга</TableCell>
-                                        <TableCell>Автор</TableCell>
-                                        <TableCell>От дата</TableCell>
-                                        <TableCell>До дата</TableCell>
-                                        <TableCell>Action</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {currentBooks.length ?
-                                        currentBooks.map((row) => (
-                                            <TableRow key={row.bookID}>
-                                                <TableCell component="th" scope="row">
-                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
-                                                        {row.book.title}
-                                                    </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.book.author}
-
-                                                </TableCell>
-                                                <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
-                                                <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
-                                                <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
-
-                                            </TableRow>
-                                        ))
-                                        : null
-                                    }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
+            <Grid container spacing={2}>
+                <Grid item sm={6} xs={12}>
+                    <Typography variant="h5" component="h5">Username: {user.username}</Typography>
                 </Grid>
-                <Grid item xs={6}>
-                    <Paper className={classes.paper}>
-                        <Typography variant="h4" component="div">
-                            Книги предстоящи
-                        </Typography>
-                        <TableContainer >
-                            <Table className={classes.table} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Книга</TableCell>
-                                        <TableCell>Автор</TableCell>
-                                        <TableCell>От дата</TableCell>
-                                        <TableCell>До дата</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {futureBooks.length ?
-                                        futureBooks.map((row) => (
-                                            <TableRow key={row.bookID}>
-                                                <TableCell component="th" scope="row">
-                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
-                                                        {row.book.title}
-                                                    </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.book.author}
-
-                                                </TableCell>
-                                                <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
-                                                <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
-                                            </TableRow>
-                                        ))
-                                        : null
-                                    }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
+                <Grid item sm={6} xs={12}>
+                    <Typography variant="h5" component="h5">Email: {user.email}</Typography>
                 </Grid>
-                <Grid item xs={6}>
-                    <Paper className={classes.paper}>
-                        <Typography variant="h4" component="div">
-                            Книги минали
-                        </Typography>
-                        <TableContainer >
-                            <Table className={classes.table} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Книга</TableCell>
-                                        <TableCell>Автор</TableCell>
-                                        <TableCell>От дата</TableCell>
-                                        <TableCell>До дата</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {pastBooks.length ?
-                                        pastBooks.map((row) => (
-                                            <TableRow key={row.bookID}>
-                                                <TableCell component="th" scope="row">
-                                                    <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
-                                                        {row.book.title}
-                                                    </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.book.author}
-
-                                                </TableCell>
-                                                <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
-                                                <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
-                                            </TableRow>
-                                        ))
-                                        : null
-                                    }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
+                <Grid item sm={6} xs={12}>
+                    <Typography variant="h5" component="h5">Role: {user.role}</Typography>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                    <Typography variant="h5" component="h5">Uid: {user.id}</Typography>
                 </Grid>
             </Grid>
+            <AppBar position="static" style={{ marginTop: '50px' }}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="simple tabs example"
+                    centered
+                >
+                    <Tab label="Книги в потребителя" />
+                    <Tab label="Книги предстоящи" />
+                    <Tab label="Книги минали" />
+                </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+                <Paper className={classes.paper}>
+                    <Typography variant="h4" component="div">
+                        Книги в потребителя
+                        </Typography>
+                    <TableContainer >
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Книга</TableCell>
+                                    <TableCell>Автор</TableCell>
+                                    <TableCell>От дата</TableCell>
+                                    <TableCell>До дата</TableCell>
+                                    <TableCell>Action</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {currentBooks.length ?
+                                    currentBooks.map((row) => (
+                                        <TableRow key={row.bookID}>
+                                            <TableCell component="th" scope="row">
+                                                <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
+                                                    {row.book.title}
+                                                </Link>
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.book.author}
+
+                                            </TableCell>
+                                            <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
+                                            <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
+                                            <TableCell><Button color="primary" variant="contained" className={classes.clBtn} onClick={() => ChangeStatusToReturned(row)}>Върната</Button></TableCell>
+
+                                        </TableRow>
+                                    ))
+                                    : null
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                <Paper className={classes.paper}>
+                    <Typography variant="h4" component="div">
+                        Книги предстоящи
+                        </Typography>
+                    <TableContainer >
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Книга</TableCell>
+                                    <TableCell>Автор</TableCell>
+                                    <TableCell>От дата</TableCell>
+                                    <TableCell>До дата</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {futureBooks.length ?
+                                    futureBooks.map((row) => (
+                                        <TableRow key={row.bookID}>
+                                            <TableCell component="th" scope="row">
+                                                <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
+                                                    {row.book.title}
+                                                </Link>
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.book.author}
+
+                                            </TableCell>
+                                            <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
+                                            <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
+                                        </TableRow>
+                                    ))
+                                    : null
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                <Paper className={classes.paper}>
+                    <Typography variant="h4" component="div">
+                        Книги минали
+                        </Typography>
+                    <TableContainer >
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Книга</TableCell>
+                                    <TableCell>Автор</TableCell>
+                                    <TableCell>От дата</TableCell>
+                                    <TableCell>До дата</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {pastBooks.length ?
+                                    pastBooks.map((row) => (
+                                        <TableRow key={row.bookID}>
+                                            <TableCell component="th" scope="row">
+                                                <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
+                                                    {row.book.title}
+                                                </Link>
+                                            </TableCell>
+                                            <TableCell>
+                                                {row.book.author}
+
+                                            </TableCell>
+                                            <TableCell>{row.startDate.toDate().toDateString()}</TableCell>
+                                            <TableCell>{row.endDate.toDate().toDateString()}</TableCell>
+                                        </TableRow>
+                                    ))
+                                    : null
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            </TabPanel>
+
         </Container>
     );
 }

@@ -25,6 +25,7 @@ export default [
     { path: "/addBook", name: "AddBook", component: AddBook },
     { path: '/books/:id', name: 'BookItem', component: BookItem },
     { path: '/category/:id', name: 'Category', component: Category },
+    { path: '/category', name: 'Category', component: Books },
     { path: '/users', name: 'Users', component: Users },
     { path: '/users/:id', name: 'UserItem', component: UserItem },
     { path: '/editbook/:id', name: 'BookItem', component: EditBookItem },

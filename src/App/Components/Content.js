@@ -30,6 +30,7 @@ import Button from '@material-ui/core/Button';
 import MenuList from './Navigation/MenuList';
 import Logo from '../../images/Logo.png'
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const drawerWidth = 240;
 
@@ -104,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'inline-flex',
         alignItems: 'center'
     },
-    footer:{
+    footer: {
         position: 'absolute',
         bottom: '0',
         backgroundColor: '#225164',
@@ -215,8 +216,16 @@ function Content() {
                 })}
             >
                 <div className={classes.drawerHeader} />
+                
+
                 <Suspense fallback={
-                    <Typography variant="h1" component="h2">Комфорта</Typography>
+                    <CircularProgress style={{
+                        width: '60px',
+                        height: '60px',
+                        position: 'absolute',
+                        left: 'calc(50% - 30px)',
+                        top: 'calc(50% - 30px)',
+                    }} />
                 }>
                     <Switch>
                         <>

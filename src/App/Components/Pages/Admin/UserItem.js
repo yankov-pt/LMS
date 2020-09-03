@@ -182,7 +182,7 @@ function UserItem(book) {
                     <Typography variant="h5" component="h5">Role: {user.role}</Typography>
                 </Grid>
                 <Grid item sm={6} xs={12}>
-                    <Typography variant="h5" component="h5">Uid: {user.id}</Typography>
+                    <Typography variant="h5" component="h5">Id: {user.id}</Typography>
                 </Grid>
             </Grid>
             <AppBar position="static" style={{ marginTop: '50px' }}>

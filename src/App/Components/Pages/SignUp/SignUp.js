@@ -139,7 +139,7 @@ export default function LogIn() {
                     >
                         Регистрирай се
           </Button>
-                    <Typography component="p" variant="body1" align="center"  >
+                    {/* <Typography component="p" variant="body1" align="center"  >
                         or
                     </Typography>
                     <Button
@@ -157,7 +157,7 @@ export default function LogIn() {
 
                     >
                         Sign In with Google
-                        </Button>
+                        </Button> */}
                     {error && <p>{error.message}</p>}
                     <Grid container>
                         <Grid item xs>

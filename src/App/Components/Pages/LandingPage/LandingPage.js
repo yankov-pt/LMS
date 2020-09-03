@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import sideMenu from '../../Navigation/menuItems'
 
 import Container from '@material-ui/core/Container';
 import G0 from '../../../../images/HomeBG.svg'
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%'
     },
     stepperArrows: {
-        top: '50%',
+        top: 'calc(50% + 40px)',
         left: '50%',
         transform: 'translate(-50%, calc(-50% - 40px))',
         background: 'transparent',
@@ -54,6 +53,15 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'none',
         fontSize: '20px',
         display: 'block',
+        height: '150px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        transition: '300ms all ease-in-out',
+        '&:hover':{
+            boxShadow: '0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12)'
+        }
 
     }
 }));
@@ -136,10 +144,10 @@ function LandingPage() {
                 </Container>
             </div>
             <div id="blue-section">
-                <Container component="main" >
+                <Container component="main" style={{position:'relative'}}>
 
                     <Typography variant="h5" component="h5"
-                        style={{ color: 'white' }}
+                        style={{marginBottom: '20px', color: 'white'}}
 
                     >Най-нови книги</Typography>
                     <AutoPlaySwipeableViews
@@ -220,7 +228,7 @@ function LandingPage() {
             <div id="get-book">
                 <Container component="main" >
 
-                    <Typography variant="h5" component="h5">Как да взема книга?</Typography>
+                    <Typography variant="h5" component="h5" style={{marginBottom: '20px'}}>Как да взема книга?</Typography>
 
                     <section class="infogr">
                         <div class="s1">
@@ -470,38 +478,137 @@ function LandingPage() {
                     </section>
                 </Container>
             </div>
-            <div >
+            <div id='categories'>
                 <Container component="main" >
 
-                    <Typography variant="h5" component="h5">Категории</Typography>
+                    <Typography variant="h5" component="h5" style={{marginBottom: '20px'}}>Категории</Typography>
                     <Grid container
                         direction="row"
                         justify="center"
                         spacing={2}
                         className={classes.cards}>
-                        {sideMenu?.[2]?.innerMenu?.map((item) =>
-                            (<Grid item lg={2} md={3} sm={4} xs={6} >
-                                <Link className={classes.genres} style={{ backgroundColor: "#fff34e7a", color: 'black' }} to={{
-                                    pathname: item.path,
-                                }}>
-                                    {item.name}
-                                </Link>
-                            </Grid>)
-
-                        )
-                        }
-
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "#fff34e", color: 'black' }} to={{
+                                pathname: "/category/Българска и световна литература",
+                            }}>
+                                Българска и световна литература
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "#225164b5", color: 'white' }} to={{
+                                pathname: "/category/Българска филология и начална педагогика",
+                            }}>
+                                Българска филология и начална педагогика
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "white", color: 'black', border: '3px dotted #FFF34E' }} to={{
+                                pathname: "/category/Биографии и други",
+                            }}>
+                                Биографии и други
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "white", color: 'black', border: '5px dotted #225164' }} to={{
+                                pathname: "/category/Съвременна литература",
+                            }}>
+                                Съвременна литература
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "white", color: 'black', border: '3px solid #FFF34E' }} to={{
+                                pathname: "/category/Право и политологи",
+                            }}>
+                                Право и политологи
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "#22516485", color: 'black' }} to={{
+                                pathname: "/category/Икономика и бизнес",
+                            }}>
+                                Икономика и бизнес
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "#fff34e7a", color: 'black' }} to={{
+                                pathname: "/category/География и история",
+                            }}>
+                                География и история
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "white", color: 'black', border: '3px dotted #FFF34E' }} to={{
+                                pathname: "/category/Енциклопедии",
+                            }}>
+                                Енциклопедии
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "#225164", color: 'white' }} to={{
+                                pathname: "/category/Речници",
+                            }}>
+                                Речници
+                            
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "#fff34e3a", color: 'black' }} to={{
+                                pathname: "/category/IT и програмиране",
+                            }}>
+                                IT и програмиране
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{  backgroundImage: 'radial-gradient(#FFF34E, #FFFBCA)', color: 'black' }} to={{
+                                pathname: "/category/Физика и математика",
+                            }}>
+                                Физика и математика
+                            </Link>
+                        </Grid>
+                        <Grid item lg={2} md={3} sm={4} xs={6} >
+                            <Link className={classes.genres} style={{ backgroundColor: "white", color: 'black', border: '7px double rgb(255 243 78 / 64%)' }} to={{
+                                pathname: "/category/Анатомия и биология",
+                            }}>
+                                Анатомия и биология
+                            </Link>
+                        </Grid>
 
 
                     </Grid>
 
                 </Container>
             </div>
-            <div >
+            <div id='contacts'>
                 <Container component="main" >
 
-                    <Typography variant="h5" component="h5">Контакти</Typography>
-
+                    <Typography variant="h5" component="h5" style={{marginBottom: '20px'}}>Контакти</Typography>
+                    <Grid container
+                        direction="row"
+                        justify="center"
+                        spacing={2}
+                        className={classes.cards}>
+                        <Grid item lg={6} md={6} sm={12} xs={12} className='contact-box' >
+                                <p style={{fontSize: '18px', fontWeight: '500', lineHeight: '22px', display: 'flex', alignSelf:'center'}}>
+                                <svg style={{marginRight: '10px', width:"21px"}} width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M27.3077 2H4.69231C3.20539 2 2 3.20539 2 4.69231V20.8462C2 22.3331 3.20539 23.5385 4.69231 23.5385H27.3077C28.7946 23.5385 30 22.3331 30 20.8462V4.69231C30 3.20539 28.7946 2 27.3077 2Z" stroke="#193F4C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6.30774 6.30762L16 13.8461L25.6924 6.30762" stroke="#193F4C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    studyhub.bulgaria@gmail.com</p>
+                                <p style={{fontSize: '18px', fontWeight: '500', lineHeight: '22px', display: 'flex', alignSelf:'center'}}>
+                                <svg style={{marginRight: '10px', width:"21px"}} width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M29.126 23.9406C28.0572 22.8637 25.4685 21.2921 24.2125 20.6588C22.5768 19.835 22.4422 19.7677 21.1566 20.7227C20.2991 21.3601 19.729 21.9295 18.7254 21.7155C17.7218 21.5015 15.541 20.2947 13.6314 18.3913C11.7219 16.4879 10.445 14.244 10.2303 13.2438C10.0156 12.2437 10.5944 11.6803 11.2258 10.8209C12.1156 9.60937 12.0483 9.40745 11.2877 7.77195C10.6947 6.49988 9.07729 3.93557 7.9963 2.87216C6.83993 1.72999 6.83993 1.93191 6.09481 2.24151C5.4882 2.49672 4.90624 2.80695 4.35621 3.1683C3.27926 3.88375 2.68156 4.47805 2.26356 5.37118C1.84557 6.26432 1.65778 8.35817 3.81639 12.2793C5.975 16.2005 7.48946 18.2055 10.6241 21.3312C13.7587 24.4568 16.169 26.1374 19.6926 28.1135C24.0516 30.5546 25.7236 30.0788 26.6194 29.6615C27.5153 29.2442 28.1124 28.6519 28.8292 27.575C29.1915 27.026 29.5025 26.4447 29.7581 25.8386C30.0684 25.0962 30.2703 25.0962 29.126 23.9406Z" stroke="#193F4C" stroke-width="3" stroke-miterlimit="10"/>
+                                </svg>
+                                    +359 884 901 121</p>
+                        </Grid>
+                        <Grid item lg={6} md={6} sm={12} xs={12} >
+                                <p>
+                                   
+                                    studyhub.bulgaria@gmail.com</p>
+                                <p>+359 884 901 121</p>
+                        </Grid>
+                    </Grid>
+                
+                    
 
                 </Container>
             </div>

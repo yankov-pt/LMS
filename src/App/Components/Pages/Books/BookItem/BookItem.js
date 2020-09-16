@@ -136,12 +136,12 @@ function BookItem() {
         var resArray = new Array();
         var finalArray = new Array();
 
-        if (itemBook.bookedDates !== undefined) {
-            if (itemBook.bookedDates.length > 0) {
-                for (var i = 0; i < itemBook.bookedDates.length; i++) {
-                    if (itemBook.bookedDates[i].status !== 'returned') {
-                        if (itemBook.bookedDates[i].endDate !== null && itemBook.bookedDates[i].startDate !== null) {
-                            var currentDate = itemBook.bookedDates[i].startDate;
+        if (itemBook?.bookedDates !== undefined) {
+            if (itemBook?.bookedDates.length > 0) {
+                for (var i = 0; i < itemBook?.bookedDates.length; i++) {
+                    if (itemBook?.bookedDates[i].status !== 'returned') {
+                        if (itemBook?.bookedDates[i].endDate !== null && itemBook?.bookedDates[i].startDate !== null) {
+                            var currentDate = itemBook?.bookedDates[i].startDate;
                             var t = new Date('Jan 01, 1970'); // Epoch
                             var start = add(t, {
                                 years: 0,
@@ -159,7 +159,7 @@ function BookItem() {
                                 days: 0,
                                 hours: 0,
                                 minutes: 0,
-                                seconds: itemBook.bookedDates[i].endDate.seconds,
+                                seconds: itemBook?.bookedDates[i].endDate.seconds,
                             });
                             while (start <= end) {
 
@@ -177,7 +177,7 @@ function BookItem() {
 
                 for (const [key, value] of Object.entries(count)) {
 
-                    if (value >= parseInt(itemBook.copies, 10)) {
+                    if (value >= parseInt(itemBook?.copies, 10)) {
                         finalArray.push(new Date(key))
                     }
                 }
@@ -247,7 +247,7 @@ function BookItem() {
                         operationId: res.id,
                         status: 'normal'
                     }
-                    var booked = itemBook.bookedDates;
+                    var booked = itemBook?.bookedDates;
                     booked.push(newDate)
 
                     futureReading.push(newBook)
@@ -311,7 +311,7 @@ function BookItem() {
                             }}>
                                 {itemBook?.cover?.length > 0 ?
                                     <img src={itemBook?.cover} alt={itemBook?.title} className={classes.cover} />
-                                    : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=31d32428-3e76-4226-ba13-78e294a86f0e" alt={itemBook.title} className={classes.cover} />
+                                    : <img src="https://firebasestorage.googleapis.com/v0/b/library-management-syste-95445.appspot.com/o/images%2FNoImage.jpg?alt=media&token=31d32428-3e76-4226-ba13-78e294a86f0e" alt={itemBook?.title} className={classes.cover} />
 
                                 }
                                 <p className={classes.language}>{itemBook?.language}</p>
@@ -413,7 +413,7 @@ function BookItem() {
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle id="alert-dialog-slide-title">{`Успешно запазихте ${itemBook.title}!`}</DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title">{`Успешно запазихте ${itemBook?.title}!`}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
 

@@ -204,7 +204,7 @@ function Content() {
                 <List>
                     {sideMenu.map(({ path, name, withAuth, component, index, innerMenu }) => (
 
-                        <MenuList path={path} name={name} withAuth={withAuth} component={component} index={index} innerMenu={innerMenu} />
+                        <MenuList key={path} path={path} name={name} withAuth={withAuth} component={component} index={index} innerMenu={innerMenu} />
                     ))}
 
                 </List>

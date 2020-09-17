@@ -121,7 +121,7 @@ function Profile() {
 
             })
         }
-    }, [value])
+    }, [])
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -168,14 +168,14 @@ function Profile() {
                                                         <TableRow key={row.operationId}>
                                                             <TableCell component="th" scope="row">
                                                                 <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
-                                                                    {row.book.title}
+                                                                    {row.book?.title}
                                                                 </Link>
                                                             </TableCell>
                                                             <TableCell>
-                                                                {row.book.author}
+                                                                {row.book?.author}
                                                             </TableCell>
-                                                            <TableCell>{moment(row.startDate.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
-                                                            <TableCell>{moment(row.endDate.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
+                                                            <TableCell>{moment(row.startDate?.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
+                                                            <TableCell>{moment(row.endDate?.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
                                                         </TableRow>
                                                     ))
                                                     : null
@@ -206,15 +206,15 @@ function Profile() {
                                                         <TableRow key={row.operationId}>
                                                             <TableCell component="th" scope="row">
                                                                 <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
-                                                                    {row.book.title}
+                                                                    {row.book?.title}
                                                                 </Link>
                                                             </TableCell>
                                                             <TableCell>
-                                                                {row.book.author}
+                                                                {row.book?.author}
 
                                                             </TableCell>
-                                                            <TableCell>{moment(row.startDate.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
-                                                            <TableCell>{moment(row.endDate.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
+                                                            <TableCell>{moment(row.startDate?.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
+                                                            <TableCell>{moment(row.endDate?.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
                                                         </TableRow>
                                                     ))
                                                     : null
@@ -245,15 +245,15 @@ function Profile() {
                                                         <TableRow key={row.operationId}>
                                                             <TableCell component="th" scope="row">
                                                                 <Link style={{ textDecoration: 'none' }} to={{ pathname: `/books/${row.bookID}` }}>
-                                                                    {row.book.title}
+                                                                    {row.book?.title}
                                                                 </Link>
                                                             </TableCell>
                                                             <TableCell>
-                                                                {row.book.author}
+                                                                {row.book?.author}
 
                                                             </TableCell>
-                                                            <TableCell>{moment(row.startDate.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
-                                                            <TableCell>{moment(row.endDate.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
+                                                            <TableCell>{moment(row.startDate?.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
+                                                            <TableCell>{moment(row.endDate?.seconds * 1000).format("dddd, DD.MM.YYYY")}</TableCell>
                                                         </TableRow>
                                                     ))
                                                     : null

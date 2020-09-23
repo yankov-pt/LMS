@@ -1,6 +1,6 @@
 
 export default [
-    { path: "/home", name: "Начало", withAuth: false },
+    { path: "/", name: "Начало", withAuth: false },
     { path: "/books", name: "Всички книги", withAuth: false },
     {
         path: "/category", name: "Категории", withAuth: false,

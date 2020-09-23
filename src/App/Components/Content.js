@@ -37,6 +37,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        overflowX: 'hidden'
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -84,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'flex-end',
     },
     content: {
+        width: '100%',
         flexGrow: 1,
         padding: "24px 0 100px",
         position: "relative",
@@ -161,7 +163,9 @@ function Content() {
 
                             }
                         </IconButton>
-                        <img src={Logo} alt="Logo" />
+                        <Link style={{ textDecoration: 'none', cursor: 'pointer' }} to={'/'} >
+                            <img src={Logo} alt="Logo" />
+                        </Link>
                     </div>
 
                     {user !== undefined ?
@@ -181,9 +185,10 @@ function Content() {
                         :
                         <div>
 
-                            <Link style={{ textDecoration: 'none', 'color': 'white' }} to={'/login'}>Log In</Link>
-                            <p style={{ display: 'inline' }}> or </p>
-                            <Link style={{ textDecoration: 'none', 'color': 'white' }} to={'/signup'}>Sign up</Link>
+                            <Link style={{ textDecoration: 'none', 'color': 'white', 'backgroundColor': '#193F4C',
+                        'padding': '5px 10px', 'borderRadius': '3px' }} to={'/login'}>Вход</Link>
+                            {/* <p style={{ display: 'inline' }}> or </p>
+                            <Link style={{ textDecoration: 'none', 'color': 'white' }} to={'/signup'}>Sign up</Link> */}
 
 
 
@@ -216,7 +221,7 @@ function Content() {
                 })}
             >
                 <div className={classes.drawerHeader} />
-                
+
 
                 <Suspense fallback={
                     <CircularProgress style={{

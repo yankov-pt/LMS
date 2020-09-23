@@ -16,7 +16,7 @@ const EditBookItem = lazy(() => import("../Components/Pages/Books/BookItem/EditB
 
 export default [
     { path: "/", name: "Home", component: LandingPage },
-    { path: "/home", name: "Home", component: LandingPage },
+    // { path: "/", name: "Home", component: LandingPage },
     { path: "/books", name: "Books", component: Books },
     { path: "/login", name: "LogIn", component: LogIn },
     { path: "/signup", name: "SignUp", component: SignUp },

@@ -43,7 +43,7 @@ function LogIn({ history }) {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const [error, setError] = useState(null)
+  const [error, setError] = useState('')
   const signInWithEmailAndPasswordHandler = (event, email, password, rememberMe) => {
     event.preventDefault();
     auth.signInWithEmailAndPassword(email, password)
@@ -51,11 +51,20 @@ function LogIn({ history }) {
         history.push('/profile')
       })
       .catch(error => {
-        setError("Error signing in with password and email!");
-        console.error("Error signing in with password and email", error);
+        if (error.code == 'auth/invalid-email') {
+          setError('Невалиден имейл');
+        }
+        else if (error.code == 'auth/user-not-found') {
+          setError('Няма регистриран потребител с този имейл');
+        }
+        else if (error.code == 'auth/wrong-password') {
+          setError('Грешна парола');
+        }
+        console.error("Error signing in with password and email", error.code);
+
       });
-    setEmail("")
-    setPassword('')
+    // setEmail("")
+    // setPassword('')
   };
 
 
@@ -93,21 +102,23 @@ function LogIn({ history }) {
             autoComplete="current-password"
             onChange={(event) => setPassword(event.target.value)}
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" onClick={(e) => setRememberMe(!rememberMe)} />}
             label="Запомни ме"
-          />
+          /> */}
+          <p style={{ 'color': 'red', 'margin': '0' }}>{error}</p>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
+            disabled={email === '' || password.length < 5}
             className={classes.submit}
             onClick={(event) => { signInWithEmailAndPasswordHandler(event, email, password, rememberMe) }}
           >
             Влез
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link to={'/forgottenPassword'} variant="body2">
                 Забравена парола?
@@ -118,10 +129,10 @@ function LogIn({ history }) {
                 {"Нямаш акаунт? Регистрирай се!"}
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </div>
-    </Container>
+    </Container >
   );
 }
 

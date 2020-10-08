@@ -122,7 +122,7 @@ function LandingPage() {
                 <img id="head-section-image" src={G0} />
                 <Container id="head-section-content" component="main" >
 
-                    <Typography component="h2" className='header'>Study Hub lib</Typography>
+                    <Typography component="h2" className='header'>StudyHub Books</Typography>
                     {searchNow
                         ?
                         <Redirect
